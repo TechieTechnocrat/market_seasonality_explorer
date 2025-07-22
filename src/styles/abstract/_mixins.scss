@@ -1,0 +1,448 @@
+@mixin layout-row-start() {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+@mixin layout(
+  $flexdirection: row,
+  $justifycontent: center,
+  $alignitems: center
+) {
+  display: flex;
+  flex-direction: $flexdirection;
+  align-items: $alignitems;
+  justify-content: $justifycontent;
+}
+
+@mixin font-props($font-weight, $font-size, $font-color) {
+  font-family: "Poppins";
+  font-weight: $font-weight;
+  font-size: $font-size;
+  color: $font-color;
+}
+
+@mixin mobile {
+  @media (max-width: 480px) {
+    @content;
+  }
+}
+
+@mixin tablet {
+  @media (min-width: 481px) and (max-width: 768px) {
+    @content;
+  }
+}
+
+@mixin desktop {
+  @media (min-width: 769px) and (max-width: 1279px) {
+    @content;
+  }
+}
+
+@mixin larger-desktop {
+  @media (min-width: 1280px) {
+    @content;
+  }
+}
+
+@mixin basic-card {
+  background: $white;
+  border-radius: $border-radius-lg;
+  box-shadow: 0 2px 12px $shadow-light;
+  border: 1px solid $shadow-card;
+  box-sizing: border-box;
+}
+
+@mixin card-header-title {
+  @include font-props(600, 18px, $text-primary);
+  margin: 0 0 $spacing-xs 0;
+  text-align: center;
+
+  @include mobile {
+    @include font-props(600, 14px, $text-primary);
+  }
+}
+
+@mixin card-header-subtitle {
+  @include font-props(400, 14px, $text-muted);
+  margin: 0 0 $spacing-md 0;
+  text-align: center;
+  line-height: 1.5;
+
+  @include mobile {
+    @include font-props(400, 12px, $text-muted);
+    margin: 0 0 $spacing-lg 0;
+  }
+}
+
+@mixin form-input {
+  width: 100%;
+  padding: $spacing-sm $spacing-md;
+  border: 2px solid $border-color;
+  border-radius: $border-radius-sm;
+  @include font-props(400, 14px, $text-primary);
+  transition: all 0.2s ease;
+  background: $white;
+  box-sizing: border-box;
+  min-height: $input-height;
+
+  &:focus {
+    outline: none;
+    border-color: $primary-blue;
+    box-shadow: 0 0 0 3px $primary-blue-light;
+  }
+
+  &:disabled {
+    background: $background-disabled;
+    color: $text-disabled;
+    cursor: not-allowed;
+  }
+
+  &.error {
+    border-color: $error-color;
+    box-shadow: 0 0 0 3px $error-light;
+  }
+
+  ::placeholder {
+    color: $text-placeholder;
+  }
+}
+
+@mixin form-label {
+  display: block;
+  @include font-props(600, 12px, $text-secondary);
+  margin-bottom: $spacing-xs;
+}
+
+@mixin primary-button {
+  width: 100%;
+  background: $primary-blue;
+  color: $white;
+  border: none;
+  border-radius: $border-radius-sm;
+  @include font-props(500, 14px, $white);
+  cursor: pointer;
+  transition: background 0.2s ease;
+  @include layout(row, center, center);
+  gap: $spacing-xs;
+  min-height: $mobile-input-height;
+
+  &:hover:not(:disabled) {
+    background: $primary-blue-hover;
+  }
+
+  &:disabled {
+    background: $text-disabled;
+    cursor: not-allowed;
+  }
+}
+
+@mixin badge($background, $color, $border) {
+  background: $background;
+  padding: 6px 12px;
+  border-radius: 6px;
+  @include font-props(500, 12px, $color);
+  border: 1px solid $border;
+  white-space: nowrap;
+  text-align: center;
+  text-transform: capitalize;
+
+  @include mobile {
+    @include font-props(500, 12px, $color);
+    padding: 4px 8px;
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@mixin definescrollbardesign() {
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #999;
+    border-radius: 3px;
+
+    &:hover {
+      background: #777;
+    }
+  }
+}
+
+@mixin textfield-mui {
+  width: 100%;
+  box-sizing: border-box;
+
+  .MuiOutlinedInput-root {
+    padding: $spacing-sm $spacing-md;
+    border-radius: $border-radius-sm;
+    background: $white;
+    @include font-props(500, 14px, $text-primary);
+    min-height: $input-height;
+    transition: all 0.2s ease;
+
+    fieldset {
+      border: 2px solid $border-color;
+    }
+
+    &:hover fieldset {
+      border-color: $border-color;
+    }
+
+    &.Mui-focused fieldset {
+      border-color: $primary-blue;
+      box-shadow: 0 0 0 3px $primary-blue-light;
+    }
+
+    &.Mui-disabled {
+      background: $background-disabled;
+      color: $text-disabled;
+      cursor: not-allowed;
+    }
+
+    &.Mui-error fieldset {
+      border-color: $error-color;
+      box-shadow: 0 0 0 3px $error-light;
+    }
+
+    .MuiInputBase-input.MuiOutlinedInput-input {
+      padding: 0;
+      ::placeholder {
+        @include font-props(500, 14px, $text-placeholder);
+      }
+    }
+  }
+
+  .MuiFormHelperText-root.Mui-error {
+    @include font-props(500, 12px, $error-color);
+    // margin-top: 0;
+
+    @include mobile {
+      @include font-props(500, 12px, $error-color);
+    }
+  }
+}
+
+@mixin autocomplete-mui {
+  width: 100%;
+  box-sizing: border-box;
+
+  .MuiInputBase-root {
+    box-sizing: border-box;
+    min-height: $input-height;
+    border: 2px solid $border-color;
+    border-radius: $border-radius-sm;
+    padding: $spacing-sm $spacing-md;
+    background: $white;
+    @include font-props(500, 14px, $text-primary);
+    transition: all 0.2s ease;
+
+    fieldset {
+      border: none;
+    }
+
+    &:hover {
+      border-color: $border-color;
+    }
+
+    &.Mui-focused {
+      border-color: $primary-blue;
+      box-shadow: 0 0 0 3px $primary-blue-light;
+    }
+
+    &:disabled {
+      background: $background-disabled;
+      color: $text-disabled;
+      cursor: not-allowed;
+    }
+
+    &.Mui-error {
+      border-color: $error-color;
+      box-shadow: 0 0 0 3px $error-light;
+    }
+  }
+
+  .MuiOutlinedInput-notchedOutline {
+    border: none;
+  }
+
+  .MuiInputBase-input.MuiOutlinedInput-input {
+    padding: 0;
+    ::placeholder {
+      @include font-props(500, 14px, $text-placeholder);
+    }
+  }
+
+  .MuiFormHelperText-root {
+    @include font-props(400, 10px, $text-muted);
+    letter-spacing: normal;
+    margin:2px 6px;
+  }
+
+  .MuiFormHelperText-root.Mui-error {
+    @include font-props(500, 12px, $error-color);
+    // margin-top: 0;
+
+    @include mobile {
+      @include font-props(500, 12px, $error-color);
+    }
+  }
+
+  .MuiAutocomplete-endAdornment {
+    button {
+      margin: 0;
+      font-size: 0.75rem;
+    }
+  }
+
+  .MuiPaper-root {
+    border: 1px solid $border-color;
+    border-radius: $border-radius-sm;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  }
+
+  .MuiAutocomplete-option {
+    @include font-props(500, 14px, $text-primary);
+    padding: $spacing-sm $spacing-md;
+    min-height: auto;
+
+    &:hover {
+      background-color: $primary-blue-light;
+    }
+
+    &.Mui-focused {
+      background-color: $primary-blue-light;
+    }
+
+    &.Mui-selected {
+      background-color: $primary-blue;
+      color: $white;
+
+      &:hover {
+        background-color: $primary-blue;
+      }
+    }
+  }
+
+  .MuiAutocomplete-noOptions {
+    @include font-props(500, 14px, $text-placeholder);
+    padding: $spacing-sm $spacing-md;
+  }
+}
+
+@mixin datetimepicker-mui {
+  width: 100%;
+  box-sizing: border-box;
+
+  .MuiPickersInputBase-root {
+    box-sizing: border-box;
+    min-height: $input-height;
+    border: 2px solid $border-color;
+    border-radius: $border-radius-sm;
+    // padding: $spacing-sm $spacing-md;
+    background: $white;
+    @include font-props(500, 14px, $text-primary);
+    transition: all 0.2s ease;
+
+    fieldset {
+      border: none;
+    }
+
+    &:hover {
+      border-color: $border-color;
+    }
+
+    &.Mui-focused {
+      border-color: $primary-blue;
+      box-shadow: 0 0 0 3px $primary-blue-light;
+    }
+
+    &:disabled {
+      background: $background-disabled;
+      color: $text-disabled;
+      cursor: not-allowed;
+    }
+
+    &.Mui-error {
+      border-color: $error-color;
+      box-shadow: 0 0 0 3px $error-light;
+    }
+  }
+
+  .MuiOutlinedInput-notchedOutline {
+    border: none;
+  }
+
+  .MuiInputBase-input.MuiOutlinedInput-input {
+    padding: 0;
+    box-sizing: border-box;
+    ::placeholder {
+      @include font-props(500, 14px, $text-placeholder);
+    }
+  }
+
+  .MuiFormHelperText-root.Mui-error {
+    @include font-props(500, 12px, $error-color);
+    // margin-top: 0;
+
+    @include mobile {
+      @include font-props(500, 12px, $error-color);
+    }
+  }
+
+  .MuiAutocomplete-endAdornment {
+    button {
+      margin: 0;
+      font-size: 0.75rem;
+    }
+  }
+
+  .MuiPaper-root {
+    border: 1px solid $border-color;
+    border-radius: $border-radius-sm;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  }
+
+  .MuiAutocomplete-option {
+    @include font-props(500, 14px, $text-primary);
+    padding: $spacing-sm $spacing-md;
+    min-height: auto;
+
+    &:hover {
+      background-color: $primary-blue-light;
+    }
+
+    &.Mui-focused {
+      background-color: $primary-blue-light;
+    }
+
+    &.Mui-selected {
+      background-color: $primary-blue;
+      color: $white;
+
+      &:hover {
+        background-color: $primary-blue;
+      }
+    }
+  }
+
+  .MuiAutocomplete-noOptions {
+    @include font-props(500, 14px, $text-placeholder);
+    padding: $spacing-sm $spacing-md;
+  }
+}

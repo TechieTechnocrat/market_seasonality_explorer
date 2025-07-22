@@ -1,0 +1,172 @@
+.home-layout {
+  min-height: 100vh;
+  width: 100%;
+  background: $background-gradient;
+  @include layout(column, center, center);
+  box-sizing: border-box;
+
+  @include desktop {
+    padding: $spacing-xxl;
+  }
+
+  @include tablet {
+    padding: $spacing-md;
+  }
+
+  @include mobile {
+    padding: $spacing-sm;
+  }
+
+  &__container {
+    @include layout(column, center, center);
+    width: 100%;
+    gap: $spacing-xl;
+    // max-width: 800px;
+    @include larger-desktop() {
+      max-width: 800px;
+      gap: $spacing-lg;
+      // background: pink;
+    }
+    @include desktop() {
+      max-width: 600px;
+      gap: $spacing-lg;
+      // background: blue;
+    }
+    @include tablet {
+      max-width: 500px;
+      gap: $spacing-lg;
+      // background: yellow;
+    }
+
+    @include mobile {
+      max-width: 100%;
+      gap: $spacing-lg;
+      // background: red;
+    }
+  }
+  &__result {
+    @include layout(column, center, center);
+    width: 100%;
+    gap: $spacing-xl;
+    // max-width: 800px;
+    @include larger-desktop() {
+      max-width: 1200px;
+      gap: $spacing-lg;
+      // background: purple;
+    }
+    @include desktop() {
+      max-width: 750px;
+      gap: $spacing-lg;
+      // background: turquoise;
+    }
+    @include tablet {
+      max-width: 600px;
+      gap: $spacing-lg;
+      // background: violet;
+    }
+
+    @include mobile {
+      max-width: 100%;
+      gap: $spacing-lg;
+      // background: teal;
+    }
+  }
+  .main-header {
+    @include layout(column, center, center);
+    color: $primary-blue;
+    width: 100%;
+
+    .lock-icon {
+      @include layout(row, center, center);
+      width: 48px;
+      height: 48px;
+      background: $primary-blue-light;
+      border-radius: $border-radius-xl;
+      margin-bottom: $spacing-md;
+    }
+
+    .title {
+      @include font-props(600, 24px, $primary-blue);
+      margin: 0 0 $spacing-xs 0;
+      text-align: center;
+
+      @include tablet {
+        @include font-props(600, 20px, $primary-blue);
+      }
+
+      @include mobile {
+        @include font-props(600, 18px, $primary-blue);
+      }
+    }
+
+    .subtitle {
+      @include font-props(400, 14px, $text-secondary);
+      margin: 0;
+      text-align: center;
+
+      @include tablet {
+        @include font-props(400, 12px, $text-secondary);
+      }
+
+      @include mobile {
+        @include font-props(400, 12px, $text-secondary);
+      }
+    }
+  }
+  .main-security-notice {
+    @include layout(row, flex-start, flex-start);
+    gap: $spacing-sm;
+    background: $white;
+    border: 1px solid $border-lighter;
+    border-radius: $border-radius-md;
+    padding: $spacing-md;
+    width: 100%;
+    box-sizing: border-box;
+
+    // Ensure it matches the card width exactly
+    max-width: 100%;
+
+    @include mobile {
+      padding: $spacing-sm;
+      gap: $spacing-xs;
+    }
+    .security-icon {
+      @include layout(row, center, center);
+      width: $spacing-xl;
+      height: $spacing-xl;
+      background: $primary-blue-light;
+      border-radius: $border-radius-sm;
+      color: $primary-blue;
+      flex-shrink: 0;
+
+      @include mobile {
+        width: 20px;
+        height: 20px;
+      }
+    }
+
+    .security-text {
+      flex: 1;
+
+      strong {
+        display: block;
+        @include font-props(500, 14px, $text-primary);
+        margin-bottom: 4px;
+
+        @include mobile {
+          @include font-props(500, 12px, $text-primary);
+        }
+      }
+
+      p {
+        @include font-props(400, 13px, $text-secondary);
+        margin: 0;
+        line-height: 1.4;
+
+        @include mobile {
+          @include font-props(400, 12px, $text-secondary);
+        }
+      }
+    }
+  }
+}
