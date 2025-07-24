@@ -1,0 +1,35 @@
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #0e1e2e;
+  color: white;
+  padding: 1rem 2rem;
+  border-bottom: 1px solid #2c3e50;
+
+  .symbol-selector {
+    select {
+      background: #1c2b3a;
+      color: white;
+      border: none;
+      padding: 0.5rem;
+      font-size: 1rem;
+    }
+  }
+
+  .symbol-info {
+    display: flex;
+    gap: 2rem;
+
+    .price {
+      font-size: 1.2rem;
+    }
+
+    .stats {
+      display: flex;
+      gap: 1rem;
+      font-size: 0.9rem;
+      color: #a5b1c2;
+    }
+  }
+}

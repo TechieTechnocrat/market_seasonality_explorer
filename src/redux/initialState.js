@@ -3,20 +3,19 @@ export const initialState = {
     currentDate: new Date(),
     selectedDate: null,
     selectedDateRange: { start: null, end: null },
-    viewMode: 'monthly', 
+    viewMode: "monthly",
     isLoading: false,
     error: null,
     calendarData: {},
     hoveredDate: null,
     showTooltip: false,
     tooltipData: null,
-
   },
 
   instrument: {
-    selectedSymbol: 'BTCUSDT',
-    availableSymbols: [],
-    currentPrice: null,
+    selectedSymbol: "BTCUSDT",
+    availableSymbols: [], 
+    currentPrice: null, 
     stats24hr: null,
     klineData: [],
     multipleSymbolsData: [],
@@ -28,15 +27,13 @@ export const initialState = {
     isLoading: false,
     error: null,
   },
-
   orderbook: {
-  lastUpdateId: null,
-  bids: [],
-  asks: [],
-  symbol: 'BTCUSDT',
-  isLoading: false,
-  error: null,
-  timestamp: null,
+    lastUpdateId: null,
+    bids: [],
+    asks: [],
+    symbol: "BTCUSDT",
+    isLoading: false,
+    error: null,
+    timestamp: null,
   },
 };
-
