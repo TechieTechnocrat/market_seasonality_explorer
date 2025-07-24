@@ -1,23 +1,41 @@
 export const initialState = {
   calendar: {
-    viewMode: 'month',             // Options: 'day', 'week', 'month'
-    selectedDate: null,            // Single date selected
-    selectedRange: [],             // Range of dates selected
+    currentDate: new Date(),
+    selectedDate: null,
+    selectedDateRange: { start: null, end: null },
+    viewMode: 'monthly', 
+    isLoading: false,
+    error: null,
+    calendarData: {},
+    hoveredDate: null,
+    showTooltip: false,
+    tooltipData: null,
   },
 
   instrument: {
-    selectedInstrument: 'BTCUSDT', // Default trading pair
+    selectedSymbol: 'BTCUSDT',
+    availableSymbols: [],
+    currentPrice: null,
+    stats24hr: null,
+    klineData: [],
+    multipleSymbolsData: [],
     filters: {
-      volatility: true,
-      liquidity: true,
-      performance: true,
+      volatilityRange: [0, 100],
+      volumeRange: [0, 1000000],
+      priceChangeRange: [-20, 20],
     },
+    isLoading: false,
+    error: null,
   },
 
   orderbook: {
-    loading: false,
-    error: null,
-    orderbookData: null,           // API response from Binance
+  lastUpdateId: null,
+  bids: [],
+  asks: [],
+  symbol: 'BTCUSDT',
+  isLoading: false,
+  error: null,
+  timestamp: null,
   },
 };
 

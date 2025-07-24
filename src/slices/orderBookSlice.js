@@ -1,32 +1,40 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { initialState } from "../redux/initialState";
 import { fetchOrderbook } from "../external/api";
+import { initialState } from "../redux/initialState";
+import { createSlice } from '@reduxjs/toolkit';
 
 const orderbookSlice = createSlice({
-  name: "orderbook",
+  name: 'orderbook',
   initialState: initialState.orderbook,
   reducers: {
-     },
-  extraReducers(builder) {
-     builder
+    clearOrderbook: (state) => {
+      state.bids = [];
+      state.asks = [];
+      state.lastUpdateId = null;
+      state.timestamp = null;
+    },
+    setSymbol: (state, action) => {
+      state.symbol = action.payload;
+    },
+  },
+  extraReducers: (builder) => {
+    builder
       .addCase(fetchOrderbook.pending, (state) => {
-        state.loading = true;
-        state.error = null;
+        state.isLoading = true;
       })
       .addCase(fetchOrderbook.fulfilled, (state, action) => {
-        state.loading = false;
-        state.orderbookData = action.payload;
-        console.log('Binance Orderbook Response:', action.payload); 
+        state.isLoading = false;
+        state.bids = action.payload.bids;
+        state.asks = action.payload.asks;
+        state.lastUpdateId = action.payload.lastUpdateId;
+        state.timestamp = Date.now();
+        state.error = null;
       })
       .addCase(fetchOrderbook.rejected, (state, action) => {
-        state.loading = false;
+        state.isLoading = false;
         state.error = action.payload?.error;
-        console.error('Orderbook fetch error:', action.payload);
       });
   },
 });
 
-export const {
-
-} = orderbookSlice.actions;
-export const orderbookReducer = orderbookSlice.reducer;
+export const { clearOrderbook, setSymbol } = orderbookSlice.actions;
+export default orderbookSlice.reducer;
