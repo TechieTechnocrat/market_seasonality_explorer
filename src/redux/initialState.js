@@ -10,6 +10,7 @@ export const initialState = {
     hoveredDate: null,
     showTooltip: false,
     tooltipData: null,
+
   },
 
   instrument: {

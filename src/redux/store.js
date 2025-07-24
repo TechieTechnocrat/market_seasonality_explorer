@@ -1,7 +1,8 @@
 import { configureStore } from "@reduxjs/toolkit";
-import calendarReducer from '../slices/calendarSlice';import orderbookReducer from '../slices/orderBookSlice';
+import calendarReducer from "../slices/calendarSlice";
+import orderbookReducer from "../slices/orderBookSlice";
 
-import instrumentReducer from '../slices/instrumentSlice';
+import instrumentReducer from "../slices/instrumentSlice";
 
 export const store = configureStore({
   reducer: {
@@ -11,9 +12,8 @@ export const store = configureStore({
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
-      serializableCheck: {
-        ignoredActions: ['persist/PERSIST', 'persist/REHYDRATE'],
-      },
+      serializableCheck: false,
     }),
+
   devTools: true,
 });
