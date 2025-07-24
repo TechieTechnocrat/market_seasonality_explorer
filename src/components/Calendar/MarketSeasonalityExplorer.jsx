@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import {
   ChevronLeft,
   ChevronRight,
@@ -9,16 +9,15 @@ import {
   Download,
   Settings,
 } from "lucide-react";
-import { fetchCalendarData } from "../../external/api";
 import { useDispatch, useSelector } from "react-redux";
-import { setCurrentDate } from "../../slices/calendarSlice";
+import { setCurrentDate, navigateMonth, setSelectedDate } from "../../slices/calendarSlice";
+import { fetchCalendarData } from "../../external/api";
 
 const MarketSeasonalityExplorer = () => {
-  const { calendarData } = useSelector((state) => state.calendar);
-  const { currentDate } = useSelector((state) => state.calendar);
-
   const dispatch = useDispatch();
-  const [selectedDate, setSelectedDate] = useState(null);
+  const { calendarData, currentDate, isLoading, error } = useSelector((state) => state.calendar);
+  
+  const [selectedDate, setLocalSelectedDate] = useState(null);
   const [viewMode, setViewMode] = useState("monthly");
   const [selectedSymbol, setSelectedSymbol] = useState("BTCUSDT");
   const [showSidePanel, setShowSidePanel] = useState(false);
@@ -27,22 +26,25 @@ const MarketSeasonalityExplorer = () => {
 
   const symbols = ["BTCUSDT", "ETHUSDT", "BNBUSDT", "ADAUSDT", "DOTUSDT"];
 
+  // Convert currentDate string back to Date object for display
+  const currentDateObj = new Date(currentDate);
+
   useEffect(() => {
     const start = new Date(
-      currentDate.getFullYear(),
-      currentDate.getMonth(),
+      currentDateObj.getFullYear(),
+      currentDateObj.getMonth(),
       1
     );
     const end = new Date(
-      currentDate.getFullYear(),
-      currentDate.getMonth() + 1,
+      currentDateObj.getFullYear(),
+      currentDateObj.getMonth() + 1,
       0
     );
     const startTime = start.getTime();
     const endTime = end.getTime();
 
     dispatch(fetchCalendarData({ symbol: selectedSymbol, startTime, endTime }));
-  }, [currentDate, selectedSymbol]);
+  }, [currentDate, selectedSymbol, dispatch]);
 
   // Get volatility color
   const getVolatilityColor = (volatility) => {
@@ -59,14 +61,16 @@ const MarketSeasonalityExplorer = () => {
   };
 
   // Navigation functions
-  const navigateMonth = (direction) => {
-    const newDate = new Date(currentDate);
-    newDate.setMonth(newDate.getMonth() + direction);
-    setCurrentDate(newDate);
+  const handleNavigateMonth = (direction) => {
+    const navigationDirection = direction === 1 ? 'next' : 'prev';
+    dispatch(navigateMonth(navigationDirection));
+    setShowSidePanel(false);
+    setLocalSelectedDate(null);
   };
 
   const handleDateClick = (date) => {
-    setSelectedDate(date);
+    setLocalSelectedDate(date);
+    dispatch(setSelectedDate(date.toISOString()));
     setShowSidePanel(true);
   };
 
@@ -78,14 +82,9 @@ const MarketSeasonalityExplorer = () => {
   // Render calendar cells
   const renderCalendarCells = () => {
     const startOfMonth = new Date(
-      currentDate.getFullYear(),
-      currentDate.getMonth(),
+      currentDateObj.getFullYear(),
+      currentDateObj.getMonth(),
       1
-    );
-    const endOfMonth = new Date(
-      currentDate.getFullYear(),
-      currentDate.getMonth() + 1,
-      0
     );
     const startDate = new Date(startOfMonth);
     startDate.setDate(startDate.getDate() - startOfMonth.getDay());
@@ -99,7 +98,7 @@ const MarketSeasonalityExplorer = () => {
 
       const dateKey = cellDate.toISOString().split("T")[0];
       const dayData = calendarData[dateKey];
-      const isCurrentMonth = cellDate.getMonth() === currentDate.getMonth();
+      const isCurrentMonth = cellDate.getMonth() === currentDateObj.getMonth();
       const isToday = cellDate.toDateString() === today.toDateString();
       const isSelected =
         selectedDate && cellDate.toDateString() === selectedDate.toDateString();
@@ -139,7 +138,7 @@ const MarketSeasonalityExplorer = () => {
                 <div
                   className="volume-bar"
                   style={{
-                    height: `${Math.min(dayData.volume / 10000, 20)}px`,
+                    height: `${Math.min(dayData.volume / 10000000, 20)}px`,
                   }}
                 ></div>
                 <div className="price-change">
@@ -161,6 +160,15 @@ const MarketSeasonalityExplorer = () => {
     : null;
   const hoveredData = hoveredDate ? calendarData[hoveredDate] : null;
 
+  if (error) {
+    return (
+      <div className="error-container">
+        <h2>Error loading data</h2>
+        <p>{error}</p>
+      </div>
+    );
+  }
+
   return (
     <div className="market-seasonality-explorer">
       {/* Header */}
@@ -171,6 +179,7 @@ const MarketSeasonalityExplorer = () => {
             <select
               value={selectedSymbol}
               onChange={(e) => setSelectedSymbol(e.target.value)}
+              disabled={isLoading}
             >
               {symbols.map((symbol) => (
                 <option key={symbol} value={symbol}>
@@ -217,6 +226,13 @@ const MarketSeasonalityExplorer = () => {
         </div>
       </header>
 
+      {/* Loading Indicator */}
+      {isLoading && (
+        <div className="loading-overlay">
+          <div className="loading-spinner">Loading market data...</div>
+        </div>
+      )}
+
       {/* Main Content */}
       <div className="main-content">
         <div
@@ -226,16 +242,24 @@ const MarketSeasonalityExplorer = () => {
         >
           {/* Calendar Header */}
           <div className="calendar-header">
-            <button className="nav-button" onClick={() => navigateMonth(-1)}>
+            <button 
+              className="nav-button" 
+              onClick={() => handleNavigateMonth(-1)}
+              disabled={isLoading}
+            >
               <ChevronLeft size={20} />
             </button>
             <h2>
-              {currentDate.toLocaleDateString("en-US", {
+              {currentDateObj.toLocaleDateString("en-US", {
                 month: "long",
                 year: "numeric",
               })}
             </h2>
-            <button className="nav-button" onClick={() => navigateMonth(1)}>
+            <button 
+              className="nav-button" 
+              onClick={() => handleNavigateMonth(1)}
+              disabled={isLoading}
+            >
               <ChevronRight size={20} />
             </button>
           </div>
@@ -270,7 +294,7 @@ const MarketSeasonalityExplorer = () => {
         </div>
 
         {/* Side Panel */}
-        {showSidePanel && selectedData && (
+        {showSidePanel && selectedData && selectedDate && (
           <div className="side-panel">
             <div className="panel-header">
               <h3>
