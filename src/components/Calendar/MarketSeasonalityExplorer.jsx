@@ -1,36 +1,37 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import {
   ChevronLeft,
   ChevronRight,
   TrendingUp,
   TrendingDown,
-  BarChart3,
-  Filter,
-  Download,
-  Settings,
 } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setCurrentDate,
   navigateMonth,
   setSelectedDate,
+  setShowModal,
+  setHoveredDate,
+  setTooltipPosition,
 } from "../../slices/calendarSlice";
+import { setSelectedSymbol } from "../../slices/instrumentSlice";
 import { fetchCalendarData } from "../../external/api";
+import { ModalSide } from "./ModalSIde";
 
 const MarketSeasonalityExplorer = () => {
   const dispatch = useDispatch();
-  const { calendarData, currentDate, isLoading, error } = useSelector(
-    (state) => state.calendar
-  );
+  const {
+    calendarData,
+    currentDate,
+    isLoading,
+    error,
+    selectedDate,
+    showModal,
+    hoveredDate,
+    tooltipPosition,
+  } = useSelector((state) => state.calendar);
 
-  const [selectedDate, setLocalSelectedDate] = useState(null);
-  const [viewMode, setViewMode] = useState("monthly");
-  const [selectedSymbol, setSelectedSymbol] = useState("BTCUSDT");
-  const [showSidePanel, setShowSidePanel] = useState(false);
-  const [hoveredDate, setHoveredDate] = useState(null);
-  const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
-
-  const symbols = ["BTCUSDT", "ETHUSDT", "BNBUSDT", "ADAUSDT", "DOTUSDT"];
+  const { selectedSymbol } = useSelector((state) => state.instrument);
 
   // Convert currentDate string back to Date object for display
   const currentDateObj = new Date(currentDate);
@@ -70,19 +71,34 @@ const MarketSeasonalityExplorer = () => {
   const handleNavigateMonth = (direction) => {
     const navigationDirection = direction === 1 ? "next" : "prev";
     dispatch(navigateMonth(navigationDirection));
-    setShowSidePanel(false);
-    setLocalSelectedDate(null);
+    dispatch(setShowModal(false));
+  };
+
+  const handleSymbolChange = (symbol) => {
+    dispatch(setSelectedSymbol(symbol));
   };
 
   const handleDateClick = (date) => {
-    setLocalSelectedDate(date);
-    dispatch(setSelectedDate(date.toISOString()));
-    setShowSidePanel(true);
+    console.log("hell", date);
+
+    const year = date.getFullYear();
+    const month = `${date.getMonth() + 1}`.padStart(2, "0"); // month is 0-indexed
+    const day = `${date.getDate()}`.padStart(2, "0");
+
+    const formattedDate = `${year}-${month}-${day}`;
+
+    console.log("aye", formattedDate);
+    dispatch(setSelectedDate(formattedDate)); // store local date
+    dispatch(setShowModal(true));
   };
 
-  const handleDateHover = (date, event) => {
-    setHoveredDate(date);
-    setTooltipPosition({ x: event.clientX, y: event.clientY });
+  const handleDateHover = (dateKey, event) => {
+    dispatch(setHoveredDate(dateKey));
+    dispatch(setTooltipPosition({ x: event.clientX, y: event.clientY }));
+  };
+
+  const handleDateLeave = () => {
+    dispatch(setHoveredDate(null));
   };
 
   const renderCalendarCells = () => {
@@ -101,12 +117,20 @@ const MarketSeasonalityExplorer = () => {
       const cellDate = new Date(startDate);
       cellDate.setDate(startDate.getDate() + i);
 
-      const dateKey = cellDate.toISOString().split("T")[0];
+      // Create date key in YYYY-MM-DD format using local date components to avoid timezone issues
+      const year = cellDate.getFullYear();
+      const month = String(cellDate.getMonth() + 1).padStart(2, "0");
+      const day = String(cellDate.getDate()).padStart(2, "0");
+      const dateKey = `${year}-${month}-${day}`;
+
       const dayData = calendarData[dateKey];
       const isCurrentMonth = cellDate.getMonth() === currentDateObj.getMonth();
       const isToday = cellDate.toDateString() === today.toDateString();
+
+      // Fix selected date comparison
       const isSelected =
-        selectedDate && cellDate.toDateString() === selectedDate.toDateString();
+        selectedDate &&
+        new Date(selectedDate).toDateString() === cellDate.toDateString();
 
       cells.push(
         <div
@@ -118,7 +142,7 @@ const MarketSeasonalityExplorer = () => {
           onMouseEnter={(e) =>
             isCurrentMonth && dayData && handleDateHover(dateKey, e)
           }
-          onMouseLeave={() => setHoveredDate(null)}
+          onMouseLeave={handleDateLeave}
         >
           <div className="cell-header">
             <span className="date-number">{cellDate.getDate()}</span>
@@ -160,9 +184,6 @@ const MarketSeasonalityExplorer = () => {
     return cells;
   };
 
-  const selectedData = selectedDate
-    ? calendarData[selectedDate.toISOString().split("T")[0]]
-    : null;
   const hoveredData = hoveredDate ? calendarData[hoveredDate] : null;
 
   if (error) {
@@ -176,190 +197,105 @@ const MarketSeasonalityExplorer = () => {
 
   return (
     <>
-      {/* Loading Indicator */}
-      {isLoading && (
+      {isLoading ? (
         <div className="loading-overlay">
           <div className="loading-spinner">Loading market data...</div>
         </div>
-      )}
-
-      <div className="main-content">
-        <div
-          className={`calendar-container ${
-            showSidePanel ? "with-sidepanel" : ""
-          }`}
-        >
-          <div className="calendar-header">
-            <div className="nav-cal">
-              <button
-                className="nav-button"
-                onClick={() => handleNavigateMonth(-1)}
-                disabled={isLoading}
-              >
-                <ChevronLeft size={20} />
-              </button>
-              <div className="current-date">
-                {currentDateObj.toLocaleDateString("en-US", {
-                  month: "long",
-                  year: "numeric",
-                })}
-              </div>
-              <button
-                className="nav-button"
-                onClick={() => handleNavigateMonth(1)}
-                disabled={isLoading}
-              >
-                <ChevronRight size={20} />
-              </button>
-            </div>
-            <div className="legend">
-              <div className="legend-item">
-                <div className="color-box low"></div>
-                <span>Low (&lt;2%)</span>
-              </div>
-              <div className="legend-item">
-                <div className="color-box medium"></div>
-                <span>Medium (2-5%)</span>
-              </div>
-              <div className="legend-item">
-                <div className="color-box high"></div>
-                <span>High (&gt;5%)</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="calendar-grid">
-            <div className="weekdays">
-              {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
-                <div key={day} className="weekday">
-                  {day}
-                </div>
-              ))}
-            </div>
-            <div className="calendar-days">{renderCalendarCells()}</div>
-          </div>
-        </div>
-
-        {/* Side Panel */}
-        {showSidePanel && selectedData && selectedDate && (
-          <div className="side-panel">
-            <div className="panel-header">
-              <h3>
-                {selectedDate.toLocaleDateString("en-US", {
-                  weekday: "long",
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                })}
-              </h3>
-              <button
-                className="close-button"
-                onClick={() => setShowSidePanel(false)}
-              >
-                ×
-              </button>
-            </div>
-
-            <div className="panel-content">
-              <div className="metric-grid">
-                <div className="metric-card">
-                  <div className="metric-label">Price Change</div>
-                  <div
-                    className={`metric-value ${getPerformanceIndicator(
-                      selectedData.priceChange
-                    )}`}
+      ) : (
+        <>
+          <div className="main-content">
+            <div className="calendar-container">
+              <div className="calendar-header">
+                <div className="nav-cal">
+                  <button
+                    className="nav-button"
+                    onClick={() => handleNavigateMonth(-1)}
+                    disabled={isLoading}
                   >
-                    {selectedData.priceChange > 0 ? "+" : ""}
-                    {selectedData.priceChange.toFixed(2)}%
+                    <ChevronLeft size={20} />
+                  </button>
+                  <div className="current-date">
+                    {currentDateObj.toLocaleDateString("en-US", {
+                      month: "long",
+                      year: "numeric",
+                    })}
                   </div>
-                </div>
-
-                <div className="metric-card">
-                  <div className="metric-label">Volatility</div>
-                  <div
-                    className={`metric-value ${getVolatilityColor(
-                      selectedData.volatility
-                    )}`}
+                  <button
+                    className="nav-button"
+                    onClick={() => handleNavigateMonth(1)}
+                    disabled={isLoading}
                   >
-                    {selectedData.volatility.toFixed(2)}%
-                  </div>
+                    <ChevronRight size={20} />
+                  </button>
                 </div>
-
-                <div className="metric-card">
-                  <div className="metric-label">Volume</div>
-                  <div className="metric-value">
-                    {(selectedData.volume / 1000000).toFixed(1)}M
+                <div className="legend">
+                  <div className="legend-item">
+                    <div className="color-box low"></div>
+                    <span>Low (&lt;2%)</span>
                   </div>
-                </div>
-
-                <div className="metric-card">
-                  <div className="metric-label">Trades</div>
-                  <div className="metric-value">
-                    {selectedData.trades.toLocaleString()}
+                  <div className="legend-item">
+                    <div className="color-box medium"></div>
+                    <span>Medium (2-5%)</span>
+                  </div>
+                  <div className="legend-item">
+                    <div className="color-box high"></div>
+                    <span>High (&gt;5%)</span>
                   </div>
                 </div>
               </div>
 
-              <div className="price-details">
-                <h4>Price Details</h4>
-                <div className="price-row">
-                  <span>Open:</span>
-                  <span>${selectedData.open.toLocaleString()}</span>
+              <div className="calendar-grid">
+                <div className="weekdays">
+                  {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map(
+                    (day) => (
+                      <div key={day} className="weekday">
+                        {day}
+                      </div>
+                    )
+                  )}
                 </div>
-                <div className="price-row">
-                  <span>High:</span>
-                  <span>${selectedData.high.toLocaleString()}</span>
-                </div>
-                <div className="price-row">
-                  <span>Low:</span>
-                  <span>${selectedData.low.toLocaleString()}</span>
-                </div>
-                <div className="price-row">
-                  <span>Close:</span>
-                  <span>${selectedData.close.toLocaleString()}</span>
-                </div>
-              </div>
-
-              <div className="mini-chart">
-                <BarChart3 size={100} className="chart-placeholder" />
-                <p>Chart visualization would go here</p>
+                <div className="calendar-days">{renderCalendarCells()}</div>
               </div>
             </div>
           </div>
-        )}
-      </div>
 
-      {hoveredData && hoveredDate && (
-        <div
-          className="tooltip"
-          style={{
-            left: tooltipPosition.x + 10,
-            top: tooltipPosition.y - 10,
-            position: "fixed",
-            zIndex: 1000,
-          }}
-        >
-          <div className="tooltip-date">
-            {new Date(hoveredDate).toLocaleDateString()}
-          </div>
-          <div className="tooltip-row">
-            <span>Volatility:</span>
-            <span className={getVolatilityColor(hoveredData.volatility)}>
-              {hoveredData.volatility.toFixed(1)}%
-            </span>
-          </div>
-          <div className="tooltip-row">
-            <span>Change:</span>
-            <span className={getPerformanceIndicator(hoveredData.priceChange)}>
-              {hoveredData.priceChange > 0 ? "+" : ""}
-              {hoveredData.priceChange.toFixed(1)}%
-            </span>
-          </div>
-          <div className="tooltip-row">
-            <span>Volume:</span>
-            <span>{(hoveredData.volume / 1000000).toFixed(1)}M</span>
-          </div>
-        </div>
+          {hoveredData && hoveredDate && (
+            <div
+              className="tooltip-calendar"
+              style={{
+                left: tooltipPosition.x + 10,
+                top: tooltipPosition.y - 10,
+                position: "fixed",
+                zIndex: 1000,
+              }}
+            >
+              <div className="tooltip-date">
+                {new Date(hoveredDate + "T00:00:00").toLocaleDateString()}
+              </div>
+              <div className="tooltip-row">
+                <span>Volatility:</span>
+                <span className={getVolatilityColor(hoveredData.volatility)}>
+                  {hoveredData.volatility.toFixed(1)}%
+                </span>
+              </div>
+              <div className="tooltip-row">
+                <span>Change:</span>
+                <span
+                  className={getPerformanceIndicator(hoveredData.priceChange)}
+                >
+                  {hoveredData.priceChange > 0 ? "+" : ""}
+                  {hoveredData.priceChange.toFixed(1)}%
+                </span>
+              </div>
+              <div className="tooltip-row">
+                <span>Volume:</span>
+                <span>{(hoveredData.volume / 1000000).toFixed(1)}M</span>
+              </div>
+            </div>
+          )}
+
+          <ModalSide />
+        </>
       )}
     </>
   );

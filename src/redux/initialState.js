@@ -1,13 +1,15 @@
 export const initialState = {
-  calendar: {
-    currentDate: new Date(),
+ calendar: {
+    currentDate: new Date().toISOString(),
     selectedDate: null,
     selectedDateRange: { start: null, end: null },
     viewMode: "monthly",
+    showModal: false,
     isLoading: false,
     error: null,
     calendarData: {},
     hoveredDate: null,
+    tooltipPosition: { x: 0, y: 0 },
     showTooltip: false,
     tooltipData: null,
   },
