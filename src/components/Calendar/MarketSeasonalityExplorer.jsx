@@ -171,61 +171,6 @@ const MarketSeasonalityExplorer = () => {
 
   return (
     <div className="market-seasonality-explorer">
-      {/* Header */}
-      <header className="app-header">
-        <div className="header-left">
-          <h1>Market Seasonality Explorer</h1>
-          <div className="symbol-selector">
-            <select
-              value={selectedSymbol}
-              onChange={(e) => setSelectedSymbol(e.target.value)}
-              disabled={isLoading}
-            >
-              {symbols.map((symbol) => (
-                <option key={symbol} value={symbol}>
-                  {symbol}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-
-        <div className="header-controls">
-          <div className="view-mode-selector">
-            <button
-              className={viewMode === "daily" ? "active" : ""}
-              onClick={() => setViewMode("daily")}
-            >
-              Daily
-            </button>
-            <button
-              className={viewMode === "weekly" ? "active" : ""}
-              onClick={() => setViewMode("weekly")}
-            >
-              Weekly
-            </button>
-            <button
-              className={viewMode === "monthly" ? "active" : ""}
-              onClick={() => setViewMode("monthly")}
-            >
-              Monthly
-            </button>
-          </div>
-
-          <div className="header-actions">
-            <button className="icon-button">
-              <Filter size={18} />
-            </button>
-            <button className="icon-button">
-              <Download size={18} />
-            </button>
-            <button className="icon-button">
-              <Settings size={18} />
-            </button>
-          </div>
-        </div>
-      </header>
-
       {/* Loading Indicator */}
       {isLoading && (
         <div className="loading-overlay">

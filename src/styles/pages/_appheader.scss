@@ -1,35 +1,185 @@
-.app-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #0e1e2e;
-  color: white;
-  padding: 1rem 2rem;
-  border-bottom: 1px solid #2c3e50;
+.main-header-app {
+  @include layout(row, space-between, flex-start);
+  gap: $spacing-sm;
+  width: 100%;
+  box-sizing: border-box;
 
-  .symbol-selector {
-    select {
-      background: #1c2b3a;
-      color: white;
-      border: none;
-      padding: 0.5rem;
-      font-size: 1rem;
+  .header-left {
+    display: flex;
+    align-items: center;
+    @include tablet() {
+      @include layout(column, flex-start, flex-start);
+    }
+    .symbol-selector {
+      select {
+        width: 130px;
+        @include app-text(1rem, $text-primary, 500);
+        background: $app-bg-light;
+        border: 1px solid $app-border;
+        border-radius: 7px;
+        padding: 0.4rem 1.1rem;
+        outline: none;
+        transition: border 0.2s;
+        &:hover,
+        &:focus {
+          border-color: $app-blue;
+        }
+        appearance: none;
+      }
+    }
+
+    .current-price {
+      @include app-text(1.08rem, $app-blue, 600);
+      padding: 0.28rem 0.85rem;
+      margin-left: 0.7rem;
+      letter-spacing: 0.03em;
+      @include tablet() {
+        margin-left: -0.8rem;
+      }
+      @include mobile() {
+        margin-left: -0.8rem;
+      }
     }
   }
 
-  .symbol-info {
+  .header-controls {
     display: flex;
-    gap: 2rem;
-
-    .price {
-      font-size: 1.2rem;
+    align-items: center;
+    gap: 1.3rem;
+    @include tablet() {
+      gap: 0.3rem;
+    }
+    @include mobile() {
+      gap: 0.3rem;
     }
 
-    .stats {
+    .view-mode-selector {
       display: flex;
-      gap: 1rem;
-      font-size: 0.9rem;
-      color: #a5b1c2;
+      gap: 0.45rem;
+      @include tablet() {
+        @include layout(row, flex-end, flex-end);
+        gap: 0.1rem;
+      }
+      @include mobile() {
+        @include layout(row, flex-end, flex-end);
+        gap: 0.1rem;
+      }
+
+      button {
+        @include app-text(0.97rem, $app-muted, 500);
+        background: transparent;
+        border: none;
+        outline: none;
+        border-radius: 6px;
+        padding: 0.38rem 1rem;
+        cursor: pointer;
+        transition: all 0.15s;
+        &:hover,
+        &.active {
+          background: $app-blue;
+          color: $app-white;
+        }
+        &.active {
+          font-weight: 600;
+        }
+      }
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 0.3rem;
+      .icon-button {
+        // background: $app-bg-light;
+        border: 1.5px solid $app-blue;
+        background: lighten($app-bg-light, 3%);
+        border-radius: 6px;
+        padding: 0.36rem 0.58rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        transition: border 0.14s, background 0.14s;
+        svg {
+          color: $app-blue;
+        }
+        &:hover {
+          transform: scale(1.05);
+        }
+      }
+    }
+  }
+
+  @include mobile {
+    flex-direction: column;
+    gap: 0.7rem;
+    padding: 0.5rem 0.5rem 0.7rem 0.5rem;
+
+    .header-left {
+      flex-direction: column;
+      align-items: flex-start;
+      width: 100%;
+      gap: 0.65rem;
+
+      .symbol-selector {
+        width: 100%;
+
+        select {
+          width: 100%;
+          min-width: 0;
+          padding: 0.38rem 0.85rem;
+          font-size: 1rem;
+
+          // Larger tap area
+          height: 2.3rem;
+        }
+      }
+
+      .current-price {
+        margin: 0;
+        margin-top: 0.2rem;
+        font-size: 0.98rem;
+        padding: 0.18rem 0.5rem;
+        background: rgba($app-blue, 0.07);
+        border-radius: 4px;
+        width: 95%;
+      }
+    }
+
+    .header-controls {
+      flex-direction: column;
+      gap: 0.6rem;
+      align-items: stretch;
+      width: 100%;
+
+      .view-mode-selector {
+        width: 100%;
+        gap: 0.18rem;
+        justify-content: flex-end;
+
+        button {
+          width: 32%;
+          min-width: 80px;
+          font-size: 0.98rem;
+          padding: 0.36rem 0.3rem;
+          margin: 0 0.05rem;
+          border-radius: 6px;
+        }
+      }
+      .header-actions {
+        width: 100%;
+        justify-content: flex-end;
+        gap: 0.12rem;
+
+        .icon-button {
+          padding: 0.32rem 0.6rem;
+          font-size: 1.08rem;
+          border-radius: 6px;
+          min-width: 38px;
+          svg {
+            width: 18px;
+            height: 18px;
+          }
+        }
+      }
     }
   }
 }

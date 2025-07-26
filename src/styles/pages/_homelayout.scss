@@ -1,9 +1,13 @@
 .home-layout {
   min-height: 100vh;
-  width: 100%;
+  width: 100vw; // Use vw so it reaches screen edges
   background: $background-gradient;
-  @include layout(column, center, center);
+  // Remove centering from the main layout, do centering only as needed for children
+  display: flex;
+  flex-direction: column;
   box-sizing: border-box;
+  padding: 0;
+  margin: 0;
 
   @include desktop {
     padding: $spacing-xxl;
@@ -17,37 +21,14 @@
     padding: $spacing-sm;
   }
 
-  &__container {
-    @include layout(column, center, center);
-    width: 100%;
-    gap: $spacing-xl;
-    // max-width: 800px;
-    @include larger-desktop() {
-      max-width: 800px;
-      gap: $spacing-lg;
-      // background: pink;
-    }
-    @include desktop() {
-      max-width: 600px;
-      gap: $spacing-lg;
-      // background: blue;
-    }
-    @include tablet {
-      max-width: 500px;
-      gap: $spacing-lg;
-      // background: yellow;
-    }
-
-    @include mobile {
-      max-width: 100%;
-      gap: $spacing-lg;
-      // background: red;
-    }
-  }
   &__result {
-    @include layout(column, center, center);
     width: 100%;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center; // If you want children contents centered horizontally
     gap: $spacing-xl;
+    padding: $spacing-lg 0;
     // max-width: 800px;
     @include larger-desktop() {
       max-width: 1200px;

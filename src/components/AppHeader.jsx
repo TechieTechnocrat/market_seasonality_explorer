@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { Filter, Download, Settings } from "lucide-react";
 import { setViewMode } from "../slices/calendarSlice";
 import { useInstrumentHook } from "../hooks/useInstrumentHook"; // adjust path if needed
+import Tooltip from "@mui/material/Tooltip";
 
 export const AppHeader = () => {
   const dispatch = useDispatch();
@@ -30,10 +31,8 @@ export const AppHeader = () => {
   };
 
   return (
-    <header className="app-header">
+    <div className="main-header-app">
       <div className="header-left">
-        <h1>Market Seasonality Explorer</h1>
-
         <div className="symbol-selector">
           <select
             value={selectedSymbol}
@@ -52,9 +51,11 @@ export const AppHeader = () => {
         </div>
 
         {currentPrice && (
-          <div className="current-price">
-            <strong>{`${currentPrice.symbol}: $${currentPrice.price}`}</strong>
-          </div>
+          <Tooltip title="Current Price" arrow>
+            <div className="current-price">
+              <strong>{` $${currentPrice.price}`}</strong>
+            </div>
+          </Tooltip>
         )}
       </div>
 
@@ -83,6 +84,6 @@ export const AppHeader = () => {
           </button>
         </div>
       </div>
-    </header>
+    </div>
   );
 };

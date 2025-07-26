@@ -2,9 +2,11 @@ import React from 'react'
 import OrderbookConsole from './Orderbook/OrderbookConsole'
 import MarketSeasonalityExplorer from './Calendar/MarketSeasonalityExplorer'
 import { AppHeader } from './AppHeader'
+import { HomeLayout } from './HomeLayout'
 
 export const DefaultPage = () => {
   return (
-    <div><AppHeader/><MarketSeasonalityExplorer/></div>
+    <HomeLayout/>
+    // <div><AppHeader/><MarketSeasonalityExplorer/></div>
   )
 }
