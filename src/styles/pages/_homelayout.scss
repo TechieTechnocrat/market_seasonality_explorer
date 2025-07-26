@@ -1,14 +1,16 @@
 .home-layout {
   min-height: 100vh;
-  width: 100vw; // Use vw so it reaches screen edges
+  width: 100%;
   background: $background-gradient;
   // Remove centering from the main layout, do centering only as needed for children
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
+  align-items: center;
+  justify-content: flex-start;
   padding: 0;
   margin: 0;
-
+  overflow-x: hidden;
   @include desktop {
     padding: $spacing-xxl;
   }
@@ -149,5 +151,11 @@
         }
       }
     }
+  }
+  .main-content-app {
+    width: 100%;
+    box-sizing: border-box;
+    max-width: 100%;
+    overflow-x: hidden;
   }
 }

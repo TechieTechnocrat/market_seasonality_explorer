@@ -1,5 +1,6 @@
 import { Shield, Lock } from "lucide-react";
 import { AppHeader } from "./AppHeader";
+import MarketSeasonalityExplorer from "./Calendar/MarketSeasonalityExplorer";
 
 export const HomeLayout = () => {
   return (
@@ -14,6 +15,9 @@ export const HomeLayout = () => {
           <p className="subtitle">Explore your options safe and easy</p>
         </div>
         <AppHeader />
+        <div className="main-content-app">
+            <MarketSeasonalityExplorer/>
+        </div>
         <div className="main-security-notice">
           <div className="security-icon">
             <Shield size={16} />

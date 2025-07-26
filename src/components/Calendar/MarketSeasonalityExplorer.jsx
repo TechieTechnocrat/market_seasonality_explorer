@@ -10,13 +10,19 @@ import {
   Settings,
 } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
-import { setCurrentDate, navigateMonth, setSelectedDate } from "../../slices/calendarSlice";
+import {
+  setCurrentDate,
+  navigateMonth,
+  setSelectedDate,
+} from "../../slices/calendarSlice";
 import { fetchCalendarData } from "../../external/api";
 
 const MarketSeasonalityExplorer = () => {
   const dispatch = useDispatch();
-  const { calendarData, currentDate, isLoading, error } = useSelector((state) => state.calendar);
-  
+  const { calendarData, currentDate, isLoading, error } = useSelector(
+    (state) => state.calendar
+  );
+
   const [selectedDate, setLocalSelectedDate] = useState(null);
   const [viewMode, setViewMode] = useState("monthly");
   const [selectedSymbol, setSelectedSymbol] = useState("BTCUSDT");
@@ -62,7 +68,7 @@ const MarketSeasonalityExplorer = () => {
 
   // Navigation functions
   const handleNavigateMonth = (direction) => {
-    const navigationDirection = direction === 1 ? 'next' : 'prev';
+    const navigationDirection = direction === 1 ? "next" : "prev";
     dispatch(navigateMonth(navigationDirection));
     setShowSidePanel(false);
     setLocalSelectedDate(null);
@@ -79,7 +85,6 @@ const MarketSeasonalityExplorer = () => {
     setTooltipPosition({ x: event.clientX, y: event.clientY });
   };
 
-  // Render calendar cells
   const renderCalendarCells = () => {
     const startOfMonth = new Date(
       currentDateObj.getFullYear(),
@@ -120,9 +125,9 @@ const MarketSeasonalityExplorer = () => {
             {dayData && (
               <div className="performance-indicator">
                 {getPerformanceIndicator(dayData.priceChange) ===
-                  "positive" && <TrendingUp size={12} />}
+                  "positive" && <TrendingUp size={15} />}
                 {getPerformanceIndicator(dayData.priceChange) ===
-                  "negative" && <TrendingDown size={12} />}
+                  "negative" && <TrendingDown size={15} />}
               </div>
             )}
           </div>
@@ -170,7 +175,7 @@ const MarketSeasonalityExplorer = () => {
   }
 
   return (
-    <div className="market-seasonality-explorer">
+    <>
       {/* Loading Indicator */}
       {isLoading && (
         <div className="loading-overlay">
@@ -178,54 +183,51 @@ const MarketSeasonalityExplorer = () => {
         </div>
       )}
 
-      {/* Main Content */}
       <div className="main-content">
         <div
           className={`calendar-container ${
             showSidePanel ? "with-sidepanel" : ""
           }`}
         >
-          {/* Calendar Header */}
           <div className="calendar-header">
-            <button 
-              className="nav-button" 
-              onClick={() => handleNavigateMonth(-1)}
-              disabled={isLoading}
-            >
-              <ChevronLeft size={20} />
-            </button>
-            <h2>
-              {currentDateObj.toLocaleDateString("en-US", {
-                month: "long",
-                year: "numeric",
-              })}
-            </h2>
-            <button 
-              className="nav-button" 
-              onClick={() => handleNavigateMonth(1)}
-              disabled={isLoading}
-            >
-              <ChevronRight size={20} />
-            </button>
+            <div className="nav-cal">
+              <button
+                className="nav-button"
+                onClick={() => handleNavigateMonth(-1)}
+                disabled={isLoading}
+              >
+                <ChevronLeft size={20} />
+              </button>
+              <div className="current-date">
+                {currentDateObj.toLocaleDateString("en-US", {
+                  month: "long",
+                  year: "numeric",
+                })}
+              </div>
+              <button
+                className="nav-button"
+                onClick={() => handleNavigateMonth(1)}
+                disabled={isLoading}
+              >
+                <ChevronRight size={20} />
+              </button>
+            </div>
+            <div className="legend">
+              <div className="legend-item">
+                <div className="color-box low"></div>
+                <span>Low (&lt;2%)</span>
+              </div>
+              <div className="legend-item">
+                <div className="color-box medium"></div>
+                <span>Medium (2-5%)</span>
+              </div>
+              <div className="legend-item">
+                <div className="color-box high"></div>
+                <span>High (&gt;5%)</span>
+              </div>
+            </div>
           </div>
 
-          {/* Legend */}
-          <div className="legend">
-            <div className="legend-item">
-              <div className="color-box low"></div>
-              <span>Low Volatility (&lt;2%)</span>
-            </div>
-            <div className="legend-item">
-              <div className="color-box medium"></div>
-              <span>Medium Volatility (2-5%)</span>
-            </div>
-            <div className="legend-item">
-              <div className="color-box high"></div>
-              <span>High Volatility (&gt;5%)</span>
-            </div>
-          </div>
-
-          {/* Calendar Grid */}
           <div className="calendar-grid">
             <div className="weekdays">
               {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
@@ -327,7 +329,6 @@ const MarketSeasonalityExplorer = () => {
         )}
       </div>
 
-      {/* Tooltip */}
       {hoveredData && hoveredDate && (
         <div
           className="tooltip"
@@ -360,7 +361,7 @@ const MarketSeasonalityExplorer = () => {
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 };
 

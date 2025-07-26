@@ -1,186 +1,28 @@
-// Variables
-$primary-color: #2563eb;
-$secondary-color: #64748b;
-$success-color: #16a34a;
-$warning-color: #f59e0b;
-$danger-color: #dc2626;
-$neutral-color: #6b7280;
-
-$bg-primary: #ffffff;
-$bg-secondary: #f8fafc;
-$bg-tertiary: #f1f5f9;
-$border-color: #e2e8f0;
-$text-primary: #1e293b;
-$text-secondary: #64748b;
-
-$volatility-low: #dcfce7;
-$volatility-low-border: #16a34a;
-$volatility-medium: #fef3c7;
-$volatility-medium-border: #f59e0b;
-$volatility-high: #fee2e2;
-$volatility-high-border: #dc2626;
-
-// Mixins
-@mixin flex-center {
+.main-content {
   display: flex;
-  align-items: center;
-  justify-content: center;
-}
 
-@mixin transition-smooth {
-  transition: all 0.2s ease-in-out;
-}
+  .calendar-container {
+    flex: 1;
+    @include transition-smooth;
 
-@mixin shadow-card {
-  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
-}
-
-@mixin shadow-hover {
-  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-}
-
-// Main Container
-.market-seasonality-explorer {
-  width: 100%;
-  min-height: 100vh;
-  background: $bg-secondary;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  color: $text-primary;
-
-  // Header Styles
-  .app-header {
-    background: $bg-primary;
-    border-bottom: 1px solid $border-color;
-    padding: 1rem 2rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    @include shadow-card;
-
-    .header-left {
-      display: flex;
-      align-items: center;
-      gap: 2rem;
-
-      h1 {
-        margin: 0;
-        font-size: 1.5rem;
-        font-weight: 600;
-        color: $text-primary;
-      }
-
-      .symbol-selector {
-        select {
-          padding: 0.5rem 1rem;
-          border: 1px solid $border-color;
-          border-radius: 0.375rem;
-          background: $bg-primary;
-          font-size: 0.875rem;
-          font-weight: 500;
-          color: $text-primary;
-          cursor: pointer;
-          @include transition-smooth;
-
-          &:hover {
-            border-color: $primary-color;
-          }
-
-          &:focus {
-            outline: none;
-            border-color: $primary-color;
-            box-shadow: 0 0 0 3px rgb(37 99 235 / 0.1);
-          }
-        }
-      }
+    &.with-sidepanel {
+      flex: 0 0 70%;
     }
 
-    .header-controls {
-      display: flex;
-      align-items: center;
-      gap: 1.5rem;
-
-      .view-mode-selector {
-        display: flex;
-        background: $bg-tertiary;
-        border-radius: 0.375rem;
-        padding: 0.25rem;
-
-        button {
-          padding: 0.5rem 1rem;
-          border: none;
-          background: transparent;
-          border-radius: 0.25rem;
-          font-size: 0.875rem;
-          font-weight: 500;
-          color: $text-secondary;
-          cursor: pointer;
-          @include transition-smooth;
-
-          &:hover {
-            color: $text-primary;
-            background: rgba(37, 99, 235, 0.1);
-          }
-
-          &.active {
-            background: $primary-color;
-            color: white;
-            @include shadow-card;
-          }
-        }
-      }
-
-      .header-actions {
-        display: flex;
-        gap: 0.5rem;
-
-        .icon-button {
-          @include flex-center;
-          width: 2.5rem;
-          height: 2.5rem;
-          border: 1px solid $border-color;
-          background: $bg-primary;
-          border-radius: 0.375rem;
-          color: $text-secondary;
-          cursor: pointer;
-          @include transition-smooth;
-
-          &:hover {
-            color: $text-primary;
-            border-color: $primary-color;
-            @include shadow-hover;
-          }
-        }
-      }
-    }
-  }
-
-  // Main Content
-  .main-content {
-    display: flex;
-    height: calc(100vh - 81px);
-
-    .calendar-container {
-      flex: 1;
-      padding: 2rem;
-      @include transition-smooth;
-
-      &.with-sidepanel {
-        flex: 0 0 70%;
-      }
-
-      // Calendar Header
-      .calendar-header {
-        @include flex-center;
-        gap: 2rem;
-        margin-bottom: 1.5rem;
-
+    // Calendar Header
+    .calendar-header {
+      @include layout(row, space-between, center);
+      margin-bottom: 10px;
+      .nav-cal {
+        @include layout(row, flex-start, center);
+        gap: 5px;
         .nav-button {
           @include flex-center;
           width: 2.5rem;
           height: 2.5rem;
           border: 1px solid $border-color;
           background: $bg-primary;
-          border-radius: 50%;
+          border-radius: 8px;
           color: $text-secondary;
           cursor: pointer;
           @include transition-smooth;
@@ -191,401 +33,215 @@ $volatility-high-border: #dc2626;
             @include shadow-hover;
           }
         }
-
-        h2 {
-          margin: 0;
-          font-size: 1.5rem;
-          font-weight: 600;
-          color: $text-primary;
-          min-width: 250px;
+        .current-date {
+          min-width: 120px;
           text-align: center;
+          @include font-props(600, 1.2rem, $primary-color);
         }
       }
+    }
 
-      // Legend
-      .legend {
+    // Legend
+    .legend {
+      @include layout(row, flex-end, center);
+      gap: 0.7rem;
+
+      .legend-item {
         display: flex;
-        justify-content: center;
-        gap: 2rem;
-        margin-bottom: 1.5rem;
-        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.2rem;
+        @include font-props(500, 12px, $text-secondary);
 
-        .legend-item {
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
-          font-size: 0.875rem;
-          color: $text-secondary;
+        .color-box {
+          width: 1.2rem;
+          height: 1.2rem;
+          border-radius: 6px;
+          border: 2px solid;
 
-          .color-box {
-            width: 1rem;
-            height: 1rem;
-            border-radius: 0.25rem;
-            border: 2px solid;
-
-            &.low {
-              background: $volatility-low;
-              border-color: $volatility-low-border;
-            }
-
-            &.medium {
-              background: $volatility-medium;
-              border-color: $volatility-medium-border;
-            }
-
-            &.high {
-              background: $volatility-high;
-              border-color: $volatility-high-border;
-            }
+          &.low {
+            background: $volatility-low;
+            border-color: $volatility-low-border;
           }
-        }
-      }
 
-      // Calendar Grid
-      .calendar-grid {
-        background: $bg-primary;
-        border-radius: 0.75rem;
-        overflow: hidden;
-        @include shadow-card;
-
-        .weekdays {
-          display: grid;
-          grid-template-columns: repeat(7, 1fr);
-          background: $bg-tertiary;
-          border-bottom: 1px solid $border-color;
-
-          .weekday {
-            padding: 1rem;
-            text-align: center;
-            font-weight: 600;
-            font-size: 0.875rem;
-            color: $text-secondary;
+          &.medium {
+            background: $volatility-medium;
+            border-color: $volatility-medium-border;
           }
-        }
 
-        .calendar-days {
-          display: grid;
-          grid-template-columns: repeat(7, 1fr);
-          gap: 1px;
-          background: $border-color;
-
-          .calendar-cell {
-            position: relative;
-            aspect-ratio: 1;
-            background: $bg-primary;
-            cursor: pointer;
-            overflow: hidden;
-            @include transition-smooth;
-
-            &:hover {
-              z-index: 10;
-              @include shadow-hover;
-              transform: scale(1.02);
-            }
-
-            &.other-month {
-              opacity: 0.4;
-              cursor: default;
-
-              &:hover {
-                transform: none;
-                box-shadow: none;
-              }
-            }
-
-            &.today {
-              .cell-header .date-number {
-                background: $primary-color;
-                color: white;
-                border-radius: 50%;
-                width: 2rem;
-                height: 2rem;
-                @include flex-center;
-              }
-            }
-
-            &.selected {
-              outline: 2px solid $primary-color;
-              outline-offset: -2px;
-              z-index: 5;
-            }
-
-            .volatility-bg {
-              position: absolute;
-              top: 0;
-              left: 0;
-              right: 0;
-              bottom: 0;
-              opacity: 0.6;
-
-              &.low {
-                background: $volatility-low;
-                border-left: 3px solid $volatility-low-border;
-              }
-
-              &.medium {
-                background: $volatility-medium;
-                border-left: 3px solid $volatility-medium-border;
-              }
-
-              &.high {
-                background: $volatility-high;
-                border-left: 3px solid $volatility-high-border;
-              }
-            }
-
-            .cell-header {
-              position: relative;
-              z-index: 2;
-              display: flex;
-              justify-content: space-between;
-              align-items: center;
-              padding: 0.5rem;
-
-              .date-number {
-                font-weight: 600;
-                font-size: 0.875rem;
-                color: $text-primary;
-              }
-
-              .performance-indicator {
-                color: $text-secondary;
-
-                svg {
-                  &[stroke="#16a34a"] {
-                    color: $success-color;
-                  }
-                  &[stroke="#dc2626"] {
-                    color: $danger-color;
-                  }
-                }
-              }
-            }
-
-            .cell-content {
-              position: relative;
-              z-index: 2;
-              height: calc(100% - 2rem);
-              display: flex;
-              flex-direction: column;
-              justify-content: space-between;
-              align-items: center;
-              padding: 0 0.5rem 0.5rem;
-
-              .volume-bar {
-                width: 100%;
-                background: rgba(37, 99, 235, 0.4);
-                border-radius: 0.125rem;
-                margin-bottom: auto;
-                @include transition-smooth;
-              }
-
-              .price-change {
-                font-size: 0.75rem;
-                font-weight: 600;
-                padding: 0.125rem 0.375rem;
-                border-radius: 0.25rem;
-                background: rgba(255, 255, 255, 0.9);
-                color: $text-primary;
-              }
-            }
+          &.high {
+            background: $volatility-high;
+            border-color: $volatility-high-border;
           }
         }
       }
     }
 
-    // Side Panel
-    .side-panel {
-      flex: 0 0 30%;
-      background: $bg-primary;
-      border-left: 1px solid $border-color;
-      overflow-y: auto;
-      @include shadow-card;
+    // Calendar Grid
+    .calendar-grid {
+      background: #f7fbff;
+      border-radius: 0.5rem;
+      overflow: hidden;
 
-      .panel-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 1.5rem;
-        border-bottom: 1px solid $border-color;
-        background: $bg-tertiary;
+      .weekdays {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        background: white; // header bg
+        border-bottom: 1px solid #e3eaf6;
 
-        h3 {
-          margin: 0;
-          font-size: 1.125rem;
-          font-weight: 600;
-          color: $text-primary;
-        }
-
-        .close-button {
-          @include flex-center;
-          width: 2rem;
-          height: 2rem;
-          border: none;
-          background: transparent;
-          border-radius: 50%;
-          font-size: 1.5rem;
-          color: $text-secondary;
-          cursor: pointer;
-          @include transition-smooth;
-
-          &:hover {
-            background: rgba(0, 0, 0, 0.1);
-            color: $text-primary;
-          }
+        .weekday {
+          @include app-text(0.97rem, #2166d9, 700); // blue, bold
+          padding: 1rem;
+          text-align: center;
         }
       }
 
-      .panel-content {
-        padding: 1.5rem;
+      .calendar-days {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 1px;
+        background: #e3eaf6;
 
-        .metric-grid {
-          display: grid;
-          grid-template-columns: repeat(2, 1fr);
-          gap: 1rem;
-          margin-bottom: 2rem;
+        .calendar-cell {
+          position: relative;
+          aspect-ratio: 1;
+          background: #f7fbff;
+          border-radius: 0.42em;
+          cursor: pointer;
+          overflow: hidden;
+          box-shadow: 0 1.5px 6px rgba(0, 20, 50, 0.04);
+          transition: background 0.18s, box-shadow 0.22s, transform 0.18s,
+            z-index 0s;
+          @include layout(column, flex-start, center);
 
-          .metric-card {
-            background: $bg-secondary;
-            padding: 1rem;
-            border-radius: 0.5rem;
-            border: 1px solid $border-color;
-
-            .metric-label {
-              font-size: 0.875rem;
-              color: $text-secondary;
-              margin-bottom: 0.5rem;
-            }
-
-            .metric-value {
-              font-size: 1.25rem;
-              font-weight: 700;
-
-              &.positive {
-                color: $success-color;
-              }
-
-              &.negative {
-                color: $danger-color;
-              }
-
-              &.neutral {
-                color: $neutral-color;
-              }
-
-              &.low {
-                color: $success-color;
-              }
-
-              &.medium {
-                color: $warning-color;
-              }
-
-              &.high {
-                color: $danger-color;
-              }
-            }
-          }
-        }
-
-        .price-details {
-          margin-bottom: 2rem;
-
-          h4 {
-            margin: 0 0 1rem 0;
-            font-size: 1rem;
-            font-weight: 600;
-            color: $text-primary;
+          &:hover:not(.other-month):not(.selected) {
+            z-index: 2;
+            background: #eaf3fd;
+            box-shadow: 0 3px 18px rgba(48, 143, 238, 0.1);
+            transform: translateY(-2px) scale(1.027);
           }
 
-          .price-row {
+          &.selected {
+            outline: 2.5px solid $warning; // deep green for selection
+            outline-offset: -1.8px;
+            z-index: 3;
+          }
+
+          &.other-month {
+            opacity: 0.36;
+            background: #f7fbff;
+            cursor: default;
+            box-shadow: none;
+            &:hover {
+              background: #f7fbff;
+            }
+          }
+
+          &.today .cell-header .date-number {
+            background: #308fee; // rich blue for today circle
+            color: #fff;
+            border-radius: 50%;
+            width: 2em;
+            height: 2em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            @include app-text(0.98rem, #fff, 700);
+          }
+
+          // --- Volatility colors ---
+          .volatility-bg {
+            position: absolute;
+            inset: 0;
+            opacity: 0.62;
+            z-index: 1;
+            pointer-events: none;
+            transition: background 0.18s;
+
+            &.low {
+              background: #dafbe5; // nice green
+            //   border-left: 3.5px solid #1d8d44; // darker green
+            }
+            &.medium {
+              background: #fff9dd; // pale yellow
+            //   border-left: 3.5px solid #fec600; // deep yellow
+            }
+            &.high {
+              background: #fde8e8; // pale red
+            //   border-left: 3.5px solid #dc2626; // deep red
+            }
+          }
+
+          .cell-header {
+            position: relative;
+            z-index: 2;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0.5rem 0;
-            border-bottom: 1px solid $border-color;
-            font-size: 0.875rem;
+            padding: 0.44rem 0.58rem 0 0.58rem;
 
-            &:last-child {
-              border-bottom: none;
+            .date-number {
+              @include app-text(1.04rem, #25314d, 600);
+              display: inline-flex;
+              min-width: 2em;
+              min-height: 2em;
+              align-items: center;
+              justify-content: center;
+              border-radius: 50%;
             }
-
-            span:first-child {
-              color: $text-secondary;
-            }
-
-            span:last-child {
-              font-weight: 600;
-              color: $text-primary;
-            }
-          }
-        }
-
-        .mini-chart {
-          @include flex-center;
-          flex-direction: column;
-          gap: 1rem;
-          padding: 2rem;
-          background: $bg-secondary;
-          border-radius: 0.5rem;
-          border: 1px solid $border-color;
-
-          .chart-placeholder {
-            color: $text-secondary;
+           
           }
 
-          p {
-            margin: 0;
-            font-size: 0.875rem;
-            color: $text-secondary;
+          .cell-content {
+            position: relative;
+            z-index: 2;
+            height: calc(100% - 2.1rem);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            padding: 0 0.5rem 0.6rem 0.5rem;
+
+            .volume-bar {
+              width: 100%;
+              min-height: 6px;
+              border-radius: 2.5px;
+              background: linear-gradient(90deg, #308fee 0%, #f5fafb 100%);
+              margin-bottom: auto;
+              margin-top: 1px;
+              transition: height 0.18s;
+            }
+            .price-change {
+              @include app-text(0.81rem, #175575, 700);
+              padding: 0.13em 0.45em;
+              border-radius: 0.28em;
+              background: rgba(255, 255, 255, 0.91);
+              margin-top: 0.16em;
+              box-shadow: 0 1px 2px rgba(48, 143, 238, 0.07);
+              transition: background 0.12s;
+              min-width: 2.2em;
+              text-align: center;
+            }
+          }
+
+          // On very small screens, shrink cell padding/font for fit
+          @media (max-width: 540px) {
+            border-radius: 0.66em;
+            .cell-header {
+              padding: 0.21rem 0.21rem 0 0.21rem;
+              .date-number {
+                font-size: 0.89rem;
+                min-width: 1.7em;
+                min-height: 1.7em;
+              }
+            }
+            .cell-content {
+              .price-change {
+                font-size: 0.78rem;
+              }
+            }
           }
         }
       }
     }
   }
-
-  // Tooltip
-  .tooltip {
-    background: rgba(0, 0, 0, 0.9);
-    color: white;
-    padding: 0.75rem;
-    border-radius: 0.375rem;
-    font-size: 0.875rem;
-    min-width: 150px;
-    @include shadow-hover;
-    pointer-events: none;
-
-    .tooltip-date {
-      font-weight: 600;
-      margin-bottom: 0.5rem;
-      padding-bottom: 0.5rem;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-    }
-
-    .tooltip-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 0.25rem;
-
-      &:last-child {
-        margin-bottom: 0;
-      }
-
-      span:last-child {
-        font-weight: 600;
-
-        &.positive {
-          color: #4ade80;
-        }
-
-        &.negative {
-          color: #f87171;
-        }
-
-        &.low {
-          color: #4ade80;}
-        }
-    }
-}
 }
