@@ -1,16 +1,15 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap");
 
 .calendar-filters {
-  font-family: 'Poppins', system-ui, sans-serif;
-  display: flex;
-  gap: 2rem;
-  padding: 1.2rem 1.8rem;
-  margin: 1.2rem 0;
-  background: #fcfcfd;
-  box-shadow: 0 2px 12px 0 rgba(60,72,105,.07);
-  border-radius: 14px;
-  align-items: flex-end;
-  flex-wrap: wrap;
+  @include layout(row, center, flex-start);
+  gap: $spacing-sm;
+  background: $white;
+  border-radius: $border-radius-md;
+  padding: $spacing-md;
+  width: 100%;
+  box-sizing: border-box;
+  max-width: 100%;
+  font-family: "Poppins";
 
   label {
     display: flex;
@@ -41,35 +40,41 @@
   }
   input[type="range"]::-webkit-slider-thumb {
     appearance: none;
-    width: 18px; height: 18px;
+    width: 18px;
+    height: 18px;
     border-radius: 50%;
     background: linear-gradient(135deg, #177cff 60%, #01d7c3 100%);
     border: 2px solid #fff;
-    box-shadow: 0 2px 8px 0 rgba(60,72,109,0.08);
-    cursor: pointer; transition: background .16s;
+    box-shadow: 0 2px 8px 0 rgba(60, 72, 109, 0.08);
+    cursor: pointer;
+    transition: background 0.16s;
   }
   input[type="range"]::-moz-range-thumb {
-    width: 18px; height: 18px;
+    width: 18px;
+    height: 18px;
     border-radius: 50%;
     background: linear-gradient(135deg, #177cff 60%, #01d7c3 100%);
     border: 2px solid #fff;
-    box-shadow: 0 2px 8px 0 rgba(60,72,109,0.08);
-    cursor: pointer; transition: background .16s;
+    box-shadow: 0 2px 8px 0 rgba(60, 72, 109, 0.08);
+    cursor: pointer;
+    transition: background 0.16s;
   }
   input[type="range"]::-ms-thumb {
-    width: 18px; height: 18px;
+    width: 18px;
+    height: 18px;
     border-radius: 50%;
     background: linear-gradient(135deg, #177cff 60%, #01d7c3 100%);
     border: 2px solid #fff;
-    box-shadow: 0 2px 8px 0 rgba(60,72,109,0.08);
-    cursor: pointer; transition: background .16s;
+    box-shadow: 0 2px 8px 0 rgba(60, 72, 109, 0.08);
+    cursor: pointer;
+    transition: background 0.16s;
   }
   input[type="range"] {
     flex: 1 1 80px;
     accent-color: #177cff;
     margin-right: 0.35rem;
     background: transparent;
-    transition: accent-color .16s;
+    transition: accent-color 0.16s;
     height: 3px;
     outline: none;
   }

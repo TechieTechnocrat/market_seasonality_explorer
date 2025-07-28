@@ -15,7 +15,6 @@ export const initialState = {
     tooltipData: null,
     zoomLevel: 1,
   },
-
   instrument: {
     selectedSymbol: "BTCUSDT",
     availableSymbols: [], 
