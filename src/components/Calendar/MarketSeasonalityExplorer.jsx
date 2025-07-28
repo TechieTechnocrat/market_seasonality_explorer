@@ -92,7 +92,13 @@ export const MarketSeasonalityExplorer = () => {
     ) {
       dispatch(setShowModal(true));
     } else {
-      dispatch(setSelectedDate(date.toISOString().slice(0, 10)));
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      const formattedDate = `${year}-${month}-${day}`;
+      dispatch(setSelectedDate(formattedDate));
+
+      // dispatch(setSelectedDate(date.toISOString().slice(0, 10)));
       dispatch(setShowModal(true));
     }
   };
@@ -353,8 +359,12 @@ export const MarketSeasonalityExplorer = () => {
               aria-live="polite"
             >
               <div className="tooltip-date">
-                {new Date(hoveredData + "T00:00:00").toLocaleDateString()}
+                {(() => {
+                  const [year, month, day] = hoveredDate.split("-");
+                  return new Date(year, month - 1, day).toLocaleDateString();
+                })()}
               </div>
+
               <div className="tooltip-row">
                 <span>Volatility:</span>
                 <span className={getVolatilityColor(hoveredData.volatility)}>

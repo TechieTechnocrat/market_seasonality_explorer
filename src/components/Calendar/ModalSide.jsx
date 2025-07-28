@@ -1,7 +1,20 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LabelList, LineChart, Line, Area, AreaChart, CartesianGrid, ReferenceLine, ComposedChart
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  LabelList,
+  LineChart,
+  Line,
+  Area,
+  AreaChart,
+  CartesianGrid,
+  ReferenceLine,
+  ComposedChart,
 } from "recharts";
 import { setShowModal } from "../../slices/calendarSlice";
 export const ModalSide = () => {
@@ -9,7 +22,6 @@ export const ModalSide = () => {
   const { showModal, selectedDate, calendarData } = useSelector(
     (state) => state.calendar
   );
-
 
   const getVolatilityColor = (volatility) => {
     if (volatility < 2) return "low";
@@ -28,10 +40,17 @@ export const ModalSide = () => {
   };
 
   if (!showModal || !selectedDate) return null;
-
-  const selectedDateObj = new Date(selectedDate);
-  const dateKey = selectedDateObj.toISOString().split("T")[0];
+  // Instead, since selectedDate is already a "YYYY-MM-DD" string
+  const dateKey = selectedDate;
+  // For display:
+  const [year, month, day] = dateKey.split("-");
+  const selectedDateObj = new Date(
+    Number(year),
+    Number(month) - 1,
+    Number(day)
+  );
   const selectedData = calendarData[dateKey];
+
 
   if (!selectedData) return null;
 
@@ -161,7 +180,7 @@ export const ModalSide = () => {
             </div>
           </div>
 
-               <div className="mini-chart" style={{marginBottom:0}}>
+          <div className="mini-chart" style={{ marginBottom: 0 }}>
             <h5>OHLC for Day</h5>
             <ResponsiveContainer width="100%" height={200}>
               <BarChart data={ohlcData}>
@@ -169,43 +188,90 @@ export const ModalSide = () => {
                 <YAxis axisLine={false} tickLine={false} hide />
                 <Tooltip />
                 <Bar dataKey="value" fill="#308fee" radius={[7, 7, 7, 7]}>
-                  <LabelList dataKey="value" position="top" fontSize={13}/>
+                  <LabelList dataKey="value" position="top" fontSize={13} />
                 </Bar>
               </BarChart>
             </ResponsiveContainer>
           </div>
 
           {/* Intraday chart (if available) */}
-          <div className="mini-chart" style={{marginBottom:0}}>
+          <div className="mini-chart" style={{ marginBottom: 0 }}>
             <h5>Intraday Price</h5>
             <ResponsiveContainer width="100%" height={150}>
               <LineChart data={intradaySample}>
-                <XAxis dataKey="time" tickLine={false} axisLine={false} fontSize={12}/>
-                <YAxis domain={['dataMin', 'dataMax']} hide />
+                <XAxis
+                  dataKey="time"
+                  tickLine={false}
+                  axisLine={false}
+                  fontSize={12}
+                />
+                <YAxis domain={["dataMin", "dataMax"]} hide />
                 <Tooltip />
-                <Line dataKey="price" type="monotone" stroke="#4ade80" strokeWidth={2} dot={false}/>
-                <ReferenceLine y={selectedData.open} label="Open" stroke="#8884d8" strokeDasharray="3 2" />
-                <ReferenceLine y={selectedData.close} label="Close" stroke="#308fee" strokeDasharray="3 2" />
+                <Line
+                  dataKey="price"
+                  type="monotone"
+                  stroke="#4ade80"
+                  strokeWidth={2}
+                  dot={false}
+                />
+                <ReferenceLine
+                  y={selectedData.open}
+                  label="Open"
+                  stroke="#8884d8"
+                  strokeDasharray="3 2"
+                />
+                <ReferenceLine
+                  y={selectedData.close}
+                  label="Close"
+                  stroke="#308fee"
+                  strokeDasharray="3 2"
+                />
               </LineChart>
             </ResponsiveContainer>
           </div>
 
           {/* Mini Trend - Volatility/Volume Dual Axis */}
           {volatilityVolumeTrend.length > 4 && (
-          <div className="mini-chart" style={{marginBottom:0}}>
-            <h5>Past/Future Trend</h5>
-            <ResponsiveContainer width="100%" height={150}>
-              <ComposedChart data={volatilityVolumeTrend}>
-                <XAxis dataKey="date" fontSize={11}/>
-                <YAxis yAxisId="left" tickLine={false} axisLine={false} fontSize={11} />
-                <YAxis yAxisId="right" orientation="right" hide />
-                <Tooltip />
-                <Bar yAxisId="right" dataKey="volume" fill="#a1a1aa" opacity={0.19} barSize={12}/>
-                <Line yAxisId="left" type="monotone" dataKey="volatility" stroke="#eab308" strokeWidth={2}/>
-                {movingAvg && <Line yAxisId="left" type="monotone" dataKey="MA7" stroke="#308fee" strokeWidth={2} dot={false}/>}
-              </ComposedChart>
-            </ResponsiveContainer>
-          </div>
+            <div className="mini-chart" style={{ marginBottom: 0 }}>
+              <h5>Past/Future Trend</h5>
+              <ResponsiveContainer width="100%" height={150}>
+                <ComposedChart data={volatilityVolumeTrend}>
+                  <XAxis dataKey="date" fontSize={11} />
+                  <YAxis
+                    yAxisId="left"
+                    tickLine={false}
+                    axisLine={false}
+                    fontSize={11}
+                  />
+                  <YAxis yAxisId="right" orientation="right" hide />
+                  <Tooltip />
+                  <Bar
+                    yAxisId="right"
+                    dataKey="volume"
+                    fill="#a1a1aa"
+                    opacity={0.19}
+                    barSize={12}
+                  />
+                  <Line
+                    yAxisId="left"
+                    type="monotone"
+                    dataKey="volatility"
+                    stroke="#eab308"
+                    strokeWidth={2}
+                  />
+                  {movingAvg && (
+                    <Line
+                      yAxisId="left"
+                      type="monotone"
+                      dataKey="MA7"
+                      stroke="#308fee"
+                      strokeWidth={2}
+                      dot={false}
+                    />
+                  )}
+                </ComposedChart>
+              </ResponsiveContainer>
+            </div>
           )}
         </div>
       </div>
