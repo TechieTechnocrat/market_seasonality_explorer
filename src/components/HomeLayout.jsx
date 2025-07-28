@@ -2,6 +2,7 @@ import { Shield, Lock } from "lucide-react";
 import { AppHeader } from "./AppHeader";
 import { CalendarFilters } from "./Calendar/CalendarFilters";
 import { MarketSeasonalityExplorer } from "./Calendar/MarketSeasonalityExplorer";
+import { CalendarSummaryPanel } from "./Calendar/CalendarSummaryPanel";
 
 export const HomeLayout = () => {
   return (
@@ -19,6 +20,9 @@ export const HomeLayout = () => {
         <CalendarFilters/>
         <div className="main-content-app">
             <MarketSeasonalityExplorer/>
+        </div>
+        <div className="main-security-notice">
+          <CalendarSummaryPanel/>
         </div>
         <div className="main-security-notice">
           <div className="security-icon">
