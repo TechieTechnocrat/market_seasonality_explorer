@@ -9,11 +9,6 @@
   max-width: 100%;
   font-family: "Poppins";
 
-  @include mobile() {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 5px;
-  }
 
   label {
     display: flex;
@@ -100,5 +95,16 @@
     @include mobile {
       font-size: 12px;
     }
+  }
+
+  @include mobile() {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 5px;
+  }
+  @include tablet() {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 5px;
   }
 }
