@@ -28,14 +28,18 @@ export const CalendarCell = ({
     (isSelected ? " selected" : "") +
     (inRange ? " in-range" : "") +
     (zoomLevel !== undefined ? ` zoom-level-${zoomLevel}` : "");
-
+  console.log(zoomLevel);
   if (!showByFilter) {
     className += " filtered-out";
   }
 
   // Determine performance state class for backgrounds and icons
-  const performanceState = dayData ? getPerformanceIndicator(dayData.priceChange) : "neutral";
-  const volatilityState = dayData ? getVolatilityColor(dayData.volatility) : "low";
+  const performanceState = dayData
+    ? getPerformanceIndicator(dayData.priceChange)
+    : "neutral";
+  const volatilityState = dayData
+    ? getVolatilityColor(dayData.volatility)
+    : "low";
 
   return (
     <div
@@ -50,15 +54,18 @@ export const CalendarCell = ({
     >
       {/* Volatility colored background with subtle opacity */}
       <div className={`volatility-bg ${volatilityState}`} aria-hidden="true" />
+      <div className={`volume-pattern ${volatilityState}`}></div>
 
       <div className="cell-header">
         <span className="date-number">{date.getDate()}</span>
         {/* Performance indicator icon and colored background */}
         {dayData && showByFilter && (
-          <div className={`performance-indicator ${performanceState}`} aria-hidden="true">
+          <div
+            className={`performance-indicator ${performanceState}`}
+            aria-hidden="true"
+          >
             {performanceState === "positive" && <TrendingUp size={15} />}
             {performanceState === "negative" && <TrendingDown size={15} />}
-            {/* Neutral: no icon */}
           </div>
         )}
       </div>
@@ -73,7 +80,6 @@ export const CalendarCell = ({
             }}
           >
             {/* Additional pattern overlays */}
-            <div className={`volume-pattern ${volatilityState}`}></div>
           </div>
           {/* Price change text with performance color */}
           <div className={`price-change ${performanceState}`}>

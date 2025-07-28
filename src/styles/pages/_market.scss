@@ -140,6 +140,44 @@
               background: #fde8e8; // pale red
             }
           }
+          .volume-pattern {
+            position: absolute;
+            inset: 0;
+            opacity: 0.15;
+            pointer-events: none;
+            border-radius: 4px;
+            background-size: 8px 8px;
+            background-repeat: repeat;
+
+            &.low {
+              background-image: radial-gradient(#1d8d44 20%, transparent 20%);
+            }
+            &.medium {
+              background-image: repeating-linear-gradient(
+                45deg,
+                #fcd34d 0,
+                #fcd34d 2px,
+                transparent 2px,
+                transparent 6px
+              );
+            }
+            &.high {
+              background-image: repeating-linear-gradient(
+                  45deg,
+                  #dc2626 0,
+                  #dc2626 1.5px,
+                  transparent 1.5px,
+                  transparent 4px
+                ),
+                repeating-linear-gradient(
+                  -45deg,
+                  #dc2626 0,
+                  #dc2626 1.5px,
+                  transparent 1.5px,
+                  transparent 4px
+                );
+            }
+          }
           &:hover:not(.other-month):not(.selected) {
             z-index: 2;
             background: #eaf3fd;
@@ -242,50 +280,6 @@
               margin-bottom: auto;
               margin-top: 1px;
               transition: height 0.18s;
-              .volume-pattern {
-                position: absolute;
-                inset: 0;
-                opacity: 0.15;
-                pointer-events: none;
-                border-radius: 4px;
-                background-size: 8px 8px;
-                background-repeat: repeat;
-
-                &.low {
-                  /* Dots pattern in green */
-                  background-image: radial-gradient(
-                    #1d8d44 20%,
-                    transparent 20%
-                  );
-                }
-                &.medium {
-                  /* Stripes pattern in yellow/orange */
-                  background-image: repeating-linear-gradient(
-                    45deg,
-                    #fcd34d 0,
-                    #fcd34d 2px,
-                    transparent 2px,
-                    transparent 6px
-                  );
-                }
-                &.high {
-                  /* Crosshatch pattern in red */
-                  background-image: repeating-linear-gradient(
-                      45deg,
-                      #dc2626 0,
-                      #dc2626 1.5px,
-                      transparent 1.5px,
-                      transparent 4px
-                    ),
-                    repeating-linear-gradient(
-                      -45deg,
-                      #dc2626 0,
-                      #dc2626 1.5px,
-                      transparent 1.5px,
-                      transparent 4px
-                    );
-                }
-              }
             }
             .price-change {
               @include app-text(0.81rem, #175575, 700);
