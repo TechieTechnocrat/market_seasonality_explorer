@@ -14,7 +14,7 @@ export const HomeLayout = () => {
           <div className="lock-icon">
             <Lock size={24} />
           </div>
-          <h1 className="title">Market Volatity Explorer</h1>
+          <h1 className="title">Market Seasonality Explorer</h1>
           <p className="subtitle">Explore your options safe and easy</p>
         </div>
         <AppHeader />
