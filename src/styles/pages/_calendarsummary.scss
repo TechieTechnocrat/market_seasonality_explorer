@@ -1,5 +1,4 @@
 .calendar-summary-panel {
- 
   h4 {
     margin-top: 0px;
     letter-spacing: 0.02em;
@@ -8,20 +7,32 @@
     span {
       @include font-props(400, 0.93em, #5a79a6);
     }
+    @include mobile() {
+      font-size: 14px;
+    }
   }
   .summary-grid {
     display: flex;
     flex-wrap: wrap;
     gap: 2.2em 2em;
+    @include mobile() {
+      gap: 1em;
+    }
     div {
       min-width: 120px;
       label {
         display: block;
         margin-bottom: 0.2em;
         @include font-props(500, 0.93em, #64748b);
+        @include mobile() {
+          font-size: 10px;
+        }
       }
       div {
         @include font-props(600, 1.07em, #334155);
+        @include mobile() {
+          font-size: 12px;
+        }
       }
     }
   }
