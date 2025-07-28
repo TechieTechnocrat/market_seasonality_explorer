@@ -1,5 +1,6 @@
 {
-  "name": "quicket-unified-public-payments-wfe",
+  "name": "market_seasonality_explorer",
+  "homepage": "https://github.com/TechieTechnocrat/market_seasonality_explorer.git",
   "private": true,
   "version": "0.0.0",
   "type": "module",
