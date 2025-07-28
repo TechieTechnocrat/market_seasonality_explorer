@@ -3,7 +3,7 @@ export const initialState = {
     currentDate: new Date().toISOString(),
     selectedDate: null,
     selectedDateRange: { start: null, end: null },
-    viewMode: "monthly",
+    viewMode: "weekly",
     showModal: false,
     isLoading: false,
     error: null,
@@ -12,6 +12,7 @@ export const initialState = {
     tooltipPosition: { x: 0, y: 0 },
     showTooltip: false,
     tooltipData: null,
+    zoomLevel: 0,
   },
 
   instrument: {

@@ -98,36 +98,71 @@
 
         .calendar-cell {
           position: relative;
-          aspect-ratio: 1;
-          background: #f7fbff;
-          border-radius: 0em;
           cursor: pointer;
           overflow: hidden;
+          background: #f7fbff;
           box-shadow: 0 1.5px 6px rgba(0, 20, 50, 0.04);
           transition: background 0.18s, box-shadow 0.22s, transform 0.18s,
             z-index 0s;
-          @include layout(column, flex-start, center);
+          display: flex;
+          flex-direction: column;
 
+          @include layout(column, flex-start, center);
+          .zoom-level-0 {
+            width: 32px;
+            height: 42px;
+            font-size: 0.9rem;
+          }
+          .zoom-level-1 {
+            width: 55px;
+            height: 70px;
+            font-size: 1.1rem;
+          }
+          .zoom-level-2 {
+            width: 85px;
+            height: 100px;
+            font-size: 1.3rem;
+          }
+          .volatility-bg {
+            position: absolute;
+            inset: 0;
+            opacity: 0.25;
+            pointer-events: none;
+            border-radius: 6px;
+
+            &.low {
+              background: #dafbe5; // pale green
+            }
+            &.medium {
+              background: #fff9dd; // pale yellow
+            }
+            &.high {
+              background: #fde8e8; // pale red
+            }
+          }
           &:hover:not(.other-month):not(.selected) {
             z-index: 2;
             background: #eaf3fd;
             box-shadow: 0 3px 18px rgba(48, 143, 238, 0.1);
-            transform: translateY(-2px) scale(1.027);
+            transform: translateY(-2px) scale(1.02);
           }
 
           &.selected {
-            outline: 2.5px solid $warning; // deep green for selection
+            outline: 2.5px solid #16a34a; // bright green for selected
             outline-offset: -1.8px;
             z-index: 3;
           }
 
           &.other-month {
-            opacity: 0.36;
+            opacity: 0.3;
             background: #f7fbff;
             cursor: default;
             box-shadow: none;
+
             &:hover {
               background: #f7fbff;
+              transform: none;
+              box-shadow: none;
             }
           }
 
@@ -141,29 +176,6 @@
             align-items: center;
             justify-content: center;
             @include app-text(0.98rem, #fff, 700);
-          }
-
-          // --- Volatility colors ---
-          .volatility-bg {
-            position: absolute;
-            inset: 0;
-            opacity: 0.62;
-            z-index: 1;
-            pointer-events: none;
-            transition: background 0.18s;
-
-            &.low {
-              background: #dafbe5; // nice green
-              //   border-left: 3.5px solid #1d8d44; // darker green
-            }
-            &.medium {
-              background: #fff9dd; // pale yellow
-              //   border-left: 3.5px solid #fec600; // deep yellow
-            }
-            &.high {
-              background: #fde8e8; // pale red
-              //   border-left: 3.5px solid #dc2626; // deep red
-            }
           }
 
           .cell-header {
@@ -182,6 +194,33 @@
               align-items: center;
               justify-content: center;
               border-radius: 50%;
+              .today & {
+                background: #308fee;
+                color: white;
+              }
+            }
+          }
+
+          .performance-indicator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            transition: background-color 0.18s ease;
+
+            &.positive {
+              background-color: #d1fae5; // pale green bg
+              color: #10b981; // emerald
+            }
+            &.negative {
+              background-color: #fee2e2; // pale red bg
+              color: #ef4444; // red-500
+            }
+            &.neutral {
+              background-color: transparent; // gray-300 bg
+              // color: #6b7280; // gray-500
             }
           }
 
@@ -203,17 +242,76 @@
               margin-bottom: auto;
               margin-top: 1px;
               transition: height 0.18s;
+              .volume-pattern {
+                position: absolute;
+                inset: 0;
+                opacity: 0.15;
+                pointer-events: none;
+                border-radius: 4px;
+                background-size: 8px 8px;
+                background-repeat: repeat;
+
+                &.low {
+                  /* Dots pattern in green */
+                  background-image: radial-gradient(
+                    #1d8d44 20%,
+                    transparent 20%
+                  );
+                }
+                &.medium {
+                  /* Stripes pattern in yellow/orange */
+                  background-image: repeating-linear-gradient(
+                    45deg,
+                    #fcd34d 0,
+                    #fcd34d 2px,
+                    transparent 2px,
+                    transparent 6px
+                  );
+                }
+                &.high {
+                  /* Crosshatch pattern in red */
+                  background-image: repeating-linear-gradient(
+                      45deg,
+                      #dc2626 0,
+                      #dc2626 1.5px,
+                      transparent 1.5px,
+                      transparent 4px
+                    ),
+                    repeating-linear-gradient(
+                      -45deg,
+                      #dc2626 0,
+                      #dc2626 1.5px,
+                      transparent 1.5px,
+                      transparent 4px
+                    );
+                }
+              }
             }
             .price-change {
               @include app-text(0.81rem, #175575, 700);
-              padding: 0.13em 0.45em;
-              border-radius: 0.28em;
-              background: rgba(255, 255, 255, 0.91);
-              margin-top: 0.16em;
+              margin-top: 0.3em;
+              padding: 0.15em 0.6em;
+              border-radius: 0.4em;
+              font-weight: 700;
+              font-size: 0.85rem;
+              color: #175575;
+              background: rgba(255, 255, 255, 0.92);
               box-shadow: 0 1px 2px rgba(48, 143, 238, 0.07);
-              transition: background 0.12s;
-              min-width: 2.2em;
               text-align: center;
+              white-space: nowrap;
+
+              &.positive {
+                color: #16a34a; // green 600
+                background: #dcfce7; // green 100 bg
+              }
+              &.negative {
+                color: #b91c1c; // red 700
+                background: #fee2e2; // red 100 bg
+              }
+              &.neutral {
+                color: #374151; // gray 700
+                background: #e5e7eb; // gray 200 bg
+              }
             }
           }
 
@@ -235,7 +333,21 @@
             }
           }
         }
+        .in-range {
+          background: #b9deb6 !important;
+          border-radius: 8px;
+        }
       }
+    }
+    .calendar-grid {
+      opacity: 1;
+      transition: opacity 0.3s ease;
+    }
+    .calendar-grid.fade-out {
+      opacity: 0;
+    }
+    .calendar-grid.fade-in {
+      opacity: 1;
     }
   }
   //toottip

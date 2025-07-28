@@ -1,9 +1,17 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Filter, Download, Settings } from "lucide-react";
-import { setViewMode } from "../slices/calendarSlice";
-import { useInstrumentHook } from "../hooks/useInstrumentHook"; // adjust path if needed
+import {
+  Filter,
+  Download,
+  Settings,
+  CalendarRange,
+  ZoomIn,
+  ZoomOut,
+} from "lucide-react";
+import { setViewMode, setZoomLevel } from "../slices/calendarSlice";
+import { useInstrumentHook } from "../hooks/useInstrumentHook";
 import Tooltip from "@mui/material/Tooltip";
+import html2canvas from "html2canvas";
 
 export const AppHeader = () => {
   const dispatch = useDispatch();
@@ -17,6 +25,7 @@ export const AppHeader = () => {
   } = useInstrumentHook();
 
   const viewMode = useSelector((state) => state.calendar.viewMode);
+  const zoomLevel = useSelector((state) => state.calendar.zoomLevel);
 
   useEffect(() => {
     loadExchangeInfo();
@@ -29,6 +38,28 @@ export const AppHeader = () => {
   const handleViewModeChange = (mode) => {
     dispatch(setViewMode(mode));
   };
+
+  const handleZoomIn = () => {
+    dispatch(setZoomLevel(Math.min(2, zoomLevel + 1)));
+  };
+
+  const handleZoomOut = () => {
+    dispatch(setZoomLevel(Math.max(0, zoomLevel - 1)));
+  };
+
+const handleDownload = () => {
+  const calendarElement = document.getElementById("calendar-container");
+  if (!calendarElement) {
+    alert("Calendar container not found.");
+    return;
+  }
+  html2canvas(calendarElement).then((canvas) => {
+    const link = document.createElement("a");
+    link.download = "calendar_capture.png";
+    link.href = canvas.toDataURL("image/png");
+    link.click();
+  });
+};
 
   return (
     <div className="main-header-app">
@@ -73,14 +104,29 @@ export const AppHeader = () => {
         </div>
 
         <div className="header-actions">
-          <button className="icon-button">
+          <button className="icon-button" title="Filter (coming soon)">
             <Filter size={18} />
           </button>
-          <button className="icon-button">
+          <button className="icon-button" title="Download calendar" onClick={handleDownload}>
             <Download size={18} />
           </button>
-          <button className="icon-button">
+          <button className="icon-button" title="Settings (coming soon)">
             <Settings size={18} />
+          </button>
+          <button
+            className={`icon-button ${viewMode === "range" ? "active" : ""}`}
+            title="Date Range Selection"
+            onClick={() =>
+              dispatch(setViewMode(viewMode === "range" ? "monthly" : "range"))
+            }
+          >
+            <CalendarRange size={18} />
+          </button>
+          <button className="icon-button" title="Zoom In" onClick={handleZoomIn}>
+            <ZoomIn size={18} />
+          </button>
+          <button className="icon-button" title="Zoom Out" onClick={handleZoomOut}>
+            <ZoomOut size={18} />
           </button>
         </div>
       </div>

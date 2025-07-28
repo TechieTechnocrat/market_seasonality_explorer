@@ -13,8 +13,22 @@ const calendarSlice = createSlice({
     setSelectedDateRange: (state, action) => {
       state.selectedDateRange = action.payload;
     },
-    setViewMode: (state, action) => {
-      state.viewMode = action.payload;
+ setViewMode: (state, action) => {
+      const mode = action.payload; // daily, weekly, monthly, range
+      state.viewMode = mode;
+      // Reset selections when switching modes if needed
+      if (mode !== "range") {
+        state.selectedDateRange = { start: null, end: null };
+      }
+      if (mode !== "monthly" && mode !== "weekly" && mode !== "daily" && mode !== "range") {
+        state.viewMode = "monthly"; // fallback
+      }
+      state.selectedDate = null; // clear single date when changing mode
+      state.showModal = false;   // close any open modal
+    },
+    setZoomLevel: (state, action) => {
+      const zoom = action.payload;
+      state.zoomLevel = Math.min(2, Math.max(0, zoom));
     },
     setShowModal: (state, action) => {
       state.showModal = action.payload;
@@ -74,6 +88,7 @@ export const {
   setSelectedDate,
   setSelectedDateRange,
   setViewMode,
+  setZoomLevel,
   setShowModal,
   setCalendarData,
   setHoveredDate,

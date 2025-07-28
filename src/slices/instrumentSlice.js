@@ -1,17 +1,15 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { 
-  fetch24hrStats, 
-  fetchKlineData, 
-  fetchCurrentPrice, 
-  fetchMultipleSymbols, 
-  fetchExchangeInfo 
-} from '../external/api';
-import { initialState } from '../redux/initialState';
-
-
+import { createSlice } from "@reduxjs/toolkit";
+import {
+  fetch24hrStats,
+  fetchKlineData,
+  fetchCurrentPrice,
+  fetchMultipleSymbols,
+  fetchExchangeInfo,
+} from "../external/api";
+import { initialState } from "../redux/initialState";
 
 const instrumentSlice = createSlice({
-  name: 'instrument',
+  name: "instrument",
   initialState: initialState.instrument,
   reducers: {
     setSelectedSymbol: (state, action) => {
@@ -22,6 +20,18 @@ const instrumentSlice = createSlice({
     },
     clearError: (state) => {
       state.error = null;
+    },
+    setAvailableSymbols: (state, action) => {
+      state.availableSymbols = action.payload;
+    },
+    setCurrentPrice: (state, action) => {
+      state.currentPrice = action.payload;
+    },
+    setLoading: (state, action) => {
+      state.isLoading = action.payload;
+    },
+    setError: (state, action) => {
+      state.error = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -89,5 +99,13 @@ const instrumentSlice = createSlice({
   },
 });
 
-export const { setSelectedSymbol, setFilters, clearError } = instrumentSlice.actions;
+export const {
+  setSelectedSymbol,
+  setFilters,
+  clearError,
+  setAvailableSymbols,
+  setCurrentPrice,
+  setLoading,
+  setError,
+} = instrumentSlice.actions;
 export default instrumentSlice.reducer;
