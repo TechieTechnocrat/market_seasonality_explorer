@@ -33,6 +33,9 @@ const calendarSlice = createSlice({
     setShowModal: (state, action) => {
       state.showModal = action.payload;
     },
+    setShowDateRangeModal: (state, action) => {
+      state.showDateRangeModal = action.payload;
+     },
     setCalendarData: (state, action) => {
       state.calendarData = { ...state.calendarData, ...action.payload };
     },
@@ -90,6 +93,7 @@ export const {
   setViewMode,
   setZoomLevel,
   setShowModal,
+  setShowDateRangeModal,
   setCalendarData,
   setHoveredDate,
   setTooltipPosition,

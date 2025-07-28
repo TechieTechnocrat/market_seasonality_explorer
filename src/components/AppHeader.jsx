@@ -8,7 +8,7 @@ import {
   ZoomIn,
   ZoomOut,
 } from "lucide-react";
-import { setViewMode, setZoomLevel } from "../slices/calendarSlice";
+import { setViewMode, setZoomLevel, setShowDateRangeModal } from "../slices/calendarSlice";
 import { useInstrumentHook } from "../hooks/useInstrumentHook";
 import Tooltip from "@mui/material/Tooltip";
 import html2canvas from "html2canvas";
@@ -26,6 +26,7 @@ export const AppHeader = () => {
 
   const viewMode = useSelector((state) => state.calendar.viewMode);
   const zoomLevel = useSelector((state) => state.calendar.zoomLevel);
+  const showDateRangeModal = useSelector((state) => state.calendar.showDateRangeModal);
 
   useEffect(() => {
     loadExchangeInfo();
@@ -37,6 +38,9 @@ export const AppHeader = () => {
 
   const handleViewModeChange = (mode) => {
     dispatch(setViewMode(mode));
+    if (mode !== "range") {
+      dispatch(setShowDateRangeModal(false));
+    }
   };
 
   const handleZoomIn = () => {
@@ -47,19 +51,31 @@ export const AppHeader = () => {
     dispatch(setZoomLevel(Math.max(0, zoomLevel - 1)));
   };
 
-const handleDownload = () => {
-  const calendarElement = document.getElementById("calendar-container");
-  if (!calendarElement) {
-    alert("Calendar container not found.");
-    return;
-  }
-  html2canvas(calendarElement).then((canvas) => {
-    const link = document.createElement("a");
-    link.download = "calendar_capture.png";
-    link.href = canvas.toDataURL("image/png");
-    link.click();
-  });
-};
+  const handleDownload = () => {
+    const calendarElement = document.getElementById("calendar-container");
+    if (!calendarElement) {
+      alert("Calendar container not found.");
+      return;
+    }
+    html2canvas(calendarElement).then((canvas) => {
+      const link = document.createElement("a");
+      link.download = "calendar_capture.png";
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+    });
+  };
+
+  // Toggle range mode and open/close date range modal
+  const handleRangeToggle = () => {
+    if (viewMode === "range") {
+      // Turning off range mode and closing modal
+      dispatch(setViewMode("monthly"));
+      dispatch(setShowDateRangeModal(false));
+    } else {
+      dispatch(setViewMode("range"));
+      dispatch(setShowDateRangeModal(true));
+    }
+  };
 
   return (
     <div className="main-header-app">
@@ -104,21 +120,17 @@ const handleDownload = () => {
         </div>
 
         <div className="header-actions">
-          <button className="icon-button" title="Filter (coming soon)">
-            <Filter size={18} />
-          </button>
-          <button className="icon-button" title="Download calendar" onClick={handleDownload}>
+          <button
+            className="icon-button"
+            title="Download calendar"
+            onClick={handleDownload}
+          >
             <Download size={18} />
-          </button>
-          <button className="icon-button" title="Settings (coming soon)">
-            <Settings size={18} />
           </button>
           <button
             className={`icon-button ${viewMode === "range" ? "active" : ""}`}
             title="Date Range Selection"
-            onClick={() =>
-              dispatch(setViewMode(viewMode === "range" ? "monthly" : "range"))
-            }
+            onClick={handleRangeToggle}
           >
             <CalendarRange size={18} />
           </button>

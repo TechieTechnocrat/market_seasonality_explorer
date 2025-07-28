@@ -3,6 +3,7 @@ import { AppHeader } from "./AppHeader";
 import { CalendarFilters } from "./Calendar/CalendarFilters";
 import { MarketSeasonalityExplorer } from "./Calendar/MarketSeasonalityExplorer";
 import { CalendarSummaryPanel } from "./Calendar/CalendarSummaryPanel";
+import { DateRangePickerModal } from "./Calendar/DateRangePickerModal";
 
 export const HomeLayout = () => {
   return (
@@ -18,6 +19,7 @@ export const HomeLayout = () => {
         </div>
         <AppHeader />
         <CalendarFilters/>
+        <DateRangePickerModal/>
         <div className="main-content-app">
             <MarketSeasonalityExplorer/>
         </div>

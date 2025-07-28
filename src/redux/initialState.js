@@ -5,6 +5,7 @@ export const initialState = {
     selectedDateRange: { start: null, end: null },
     viewMode: "weekly",
     showModal: false,
+    showDateRangeModal : false,
     isLoading: false,
     error: null,
     calendarData: {},
@@ -12,7 +13,7 @@ export const initialState = {
     tooltipPosition: { x: 0, y: 0 },
     showTooltip: false,
     tooltipData: null,
-    zoomLevel: 0,
+    zoomLevel: 1,
   },
 
   instrument: {

@@ -4,7 +4,22 @@
   .calendar-container {
     flex: 1;
     @include transition-smooth;
+    &.zoom-level-0 {
+      transform: scale(0.8);
+      font-size: 0.85rem;
+      // Optional: adjust gaps if needed
+    }
 
+    &.zoom-level-1 {
+      transform: scale(1);
+      font-size: 1rem;
+    }
+
+    &.zoom-level-2 {
+      transform: scale(1.2);
+      font-size: 1.15rem;
+      // Optional: adjust gaps if needed
+    }
     .calendar-header {
       @include layout(row, space-between, center);
       margin-bottom: 10px;
@@ -108,21 +123,7 @@
           flex-direction: column;
 
           @include layout(column, flex-start, center);
-          .zoom-level-0 {
-            width: 32px;
-            height: 42px;
-            font-size: 0.9rem;
-          }
-          .zoom-level-1 {
-            width: 55px;
-            height: 70px;
-            font-size: 1.1rem;
-          }
-          .zoom-level-2 {
-            width: 85px;
-            height: 100px;
-            font-size: 1.3rem;
-          }
+
           .volatility-bg {
             position: absolute;
             inset: 0;
@@ -327,6 +328,7 @@
             }
           }
         }
+
         .in-range {
           background: #b9deb6 !important;
           border-radius: 8px;
@@ -344,6 +346,18 @@
       opacity: 1;
     }
   }
+  .calendar-container.zoom-level-0 {
+    gap: 3px;
+  }
+
+  .calendar-container.zoom-level-1 {
+    gap: 6px;
+  }
+
+  .calendar-container.zoom-level-2 {
+    gap: 10px;
+  }
+
   //toottip
 }
 
